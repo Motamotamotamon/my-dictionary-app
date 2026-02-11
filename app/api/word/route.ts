@@ -51,7 +51,7 @@ export async function POST(req: Request) {
 /* PATCH */
 export async function PATCH(req: Request) {
   const body = await req.json();
-  const { id, meaning } = body;
+  const { id, meaning, example } = body;
 
   const updated = await prisma.word.update({
     where: { id },
