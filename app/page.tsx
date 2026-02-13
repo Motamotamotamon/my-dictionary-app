@@ -22,6 +22,28 @@ export default function Home() {
   const [newExample, setNewExample] = useState("");
   const [editMeaning, setEditMeaning] = useState("");
   const [editExample, setEditExample] = useState("");
+  const [dictionaryData, setDictionaryData] = useState<any>(null);
+  const [aiResult, setAiResult] = useState<any>(null);
+  // 📖 辞書取得
+const fetchDictionary = async (word: string) => {
+  const res = await fetch(`/api/dictionary?word=${word}`);
+  const data = await res.json();
+  setDictionaryData(data);
+};
+
+// 🤖 AI取得（これ1つだけ残す）
+const fetchAI = async (word: string, id: number) => {
+  const res = await fetch("/api/ai", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ word, id }),
+  });
+
+  const data = await res.json();
+  console.log("AI response:", data);
+  setAiResult(data);
+};
+
 
   const saveEdit = async (w: Word) => {
   await fetch("/api/word", {
@@ -137,7 +159,23 @@ export default function Home() {
         <tbody>
   {words.map((w) => (
     <tr key={w.id}>
-      <td>{w.word}</td>
+      <td>
+  {w.word}
+  <button
+    type="button"
+    style={{ marginLeft: 6 }}
+    onClick={() => fetchDictionary(w.word)}
+  >
+    📖
+  </button>
+  <button
+    type="button"
+    style={{ marginLeft: 6 }}
+    onClick={() => fetchAI(w.word, w.id)}
+  >
+    🤖
+  </button>
+</td>
       <td>
   {editingId === w.id ? (
     <input
@@ -234,6 +272,79 @@ export default function Home() {
   ))}
 </tbody>
       </table>
+      {dictionaryData && (
+  <div
+    style={{
+      marginTop: 30,
+      padding: 20,
+      border: "1px solid gray",
+      borderRadius: 8,
+    }}
+  >
+    <h2>📖 英英辞書</h2>
+
+    {dictionaryData[0]?.meanings?.map((meaning: any, i: number) => (
+      <div key={i} style={{ marginBottom: 20 }}>
+        <h3>{meaning.partOfSpeech}</h3>
+
+        {meaning.definitions.map((def: any, j: number) => (
+          <div key={j} style={{ marginBottom: 10 }}>
+            <p>• {def.definition}</p>
+
+            {def.example && (
+              <p style={{ color: "gray", marginLeft: 10 }}>
+                Example: {def.example}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+)}
+
+{aiResult && (
+  <div style={{ marginTop: 40 }}>
+
+    {/* 🔵 Idioms */}
+    <div style={{ padding: 20, border: "1px solid #ccc", borderRadius: 8, marginBottom: 20 }}>
+      <h2>🔵 Idioms / Phrases</h2>
+      {aiResult.idioms?.map((item: any, i: number) => (
+        <div key={i} style={{ marginBottom: 15 }}>
+          <strong>{item.expression}</strong>
+          <p>{item.meaning}</p>
+          <p style={{ color: "gray" }}>{item.example}</p>
+        </div>
+      ))}
+    </div>
+
+    {/* 🟢 Usage */}
+    <div style={{ padding: 20, border: "1px solid #4CAF50", borderRadius: 8, marginBottom: 20 }}>
+      <h2>🟢 Usage</h2>
+      <p><strong>Frequency:</strong> {aiResult.usage?.frequency}</p>
+      <p><strong>Formality:</strong> {aiResult.usage?.formality}</p>
+      <p>{aiResult.usage?.notes}</p>
+    </div>
+
+    {/* 🟡 Translation */}
+    <div style={{ padding: 20, border: "1px solid #FFC107", borderRadius: 8, marginBottom: 20 }}>
+      <h2>🟡 Japanese Translation</h2>
+      <p><strong>Literal:</strong> {aiResult.translation?.literal_japanese}</p>
+      <p><strong>Medical:</strong> {aiResult.translation?.medical_context}</p>
+      <p><strong>Casual:</strong> {aiResult.translation?.casual_context}</p>
+    </div>
+
+    {/* 🔴 Native Warning */}
+    <div style={{ padding: 20, border: "1px solid red", borderRadius: 8 }}>
+      <h2>🔴 Native Naturalness</h2>
+      <p>
+        {aiResult.native_warning?.is_natural ? "✅ Natural expression" : "⚠️ Not natural"}
+      </p>
+      <p>{aiResult.native_warning?.explanation}</p>
+    </div>
+
+  </div>
+)}
     </main>
   );
 }

@@ -20,6 +20,7 @@ model Word {
   definition   String
   meaning      String   // ← 追加
   example      String?
+  aiAnalysis Json?
   createdAt    DateTime @default(now())
 }
 
