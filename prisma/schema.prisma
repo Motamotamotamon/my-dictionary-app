@@ -16,11 +16,30 @@ datasource db {
 model Word {
   id           Int      @id @default(autoincrement())
   word         String
-  partOfSpeech String
-  definition   String
-  meaning      String   // ← 追加
+  meaning      String?
+  definition   String?
+  partOfSpeech String?
   example      String?
-  aiAnalysis Json?
+  aiAnalysis   Json?
   createdAt    DateTime @default(now())
+
+  savedItems   SavedItem[]
 }
+model SavedItem {
+  id        Int      @id @default(autoincrement())
+  content   String
+  type      String
+  wordId    Int?
+  word      Word?    @relation(fields: [wordId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([wordId, type])
+}
+model SearchHistory {
+  id        Int      @id @default(autoincrement())
+  query     String
+  mode      String   // "en-ja" | "ja-en" | "en-en"
+  createdAt DateTime @default(now())
+}
+
 

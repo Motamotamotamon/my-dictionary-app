@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 type Word = {
   id: number;
@@ -24,6 +25,11 @@ export default function Home() {
   const [editExample, setEditExample] = useState("");
   const [dictionaryData, setDictionaryData] = useState<any>(null);
   const [aiResult, setAiResult] = useState<any>(null);
+  const [searchWord, setSearchWord] = useState("");
+  const [selectedMode, setSelectedMode] = useState("en-ja");
+  const [history, setHistory] = useState<any[]>([]);
+  const [savedIds, setSavedIds] = useState<number[]>([]);
+
   // 📖 辞書取得
 const fetchDictionary = async (word: string) => {
   const res = await fetch(`/api/dictionary?word=${word}`);
@@ -73,10 +79,68 @@ const fetchAI = async (word: string, id: number) => {
       .then((res) => res.json())
       .then(setWords);
   }, [query]);
+  // 🕘 履歴取得
+const fetchRecentHistory = async () => {
+  const res = await fetch("/api/history");
+  const data = await res.json();
+  setHistory(data);
+};
+const fetchSaved = async () => {
+  const res = await fetch("/api/save");
+  const data = await res.json();
+
+  console.log("SAVE DATA:", data);
+
+  const ids = data
+    .filter((item: any) => item.word)
+    .map((item: any) => item.word.id);
+
+  console.log("EXTRACTED IDS:", ids);
+
+  setSavedIds(ids);
+};
+
+// 🔎 検索実行（履歴保存付き）
+const handleSearch = async () => {
+  if (!query.trim()) return;
+
+  // 履歴保存
+  await fetch("/api/history", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      query,
+      mode: selectedMode,
+    }),
+  });
+
+  fetchRecentHistory();
+};
+useEffect(() => {
+  fetchRecentHistory();
+  fetchSaved();
+}, []);
+
 
   return (
     <main style={{ padding: 20 }}>
       <h1>📘 自分の単語帳</h1>
+      <div style={{ marginBottom: 20 }}>
+  <Link
+    href="/saved"
+    style={{
+      padding: "6px 12px",
+      backgroundColor: "#facc15",
+      borderRadius: 6,
+      textDecoration: "none",
+      color: "black",
+      fontWeight: "bold",
+    }}
+  >
+    ⭐ 保存一覧
+  </Link>
+</div>
+
       <h2>➕ 新しい単語を追加</h2>
 
 <div style={{ marginBottom: 20 }}>
@@ -139,11 +203,32 @@ const fetchAI = async (word: string, id: number) => {
 </div>
 
       <input
-        placeholder="🔍 単語・意味で検索"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        style={{ padding: 8, width: 300, marginBottom: 20 }}
-      />
+  placeholder="🔍 単語・意味で検索"
+  value={query}
+  onChange={(e) => setQuery(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  }}
+  style={{ padding: 8, width: 300, marginBottom: 20 }}
+/>
+<div style={{ marginTop: 20, marginBottom: 20 }}>
+  <h3>🕘 Recent Searches</h3>
+  {history.map((item) => (
+    <div key={item.id}>
+      {item.query} ({item.mode})
+    </div>
+  ))}
+</div>
+
+<button
+  type="button"
+  onClick={handleSearch}
+  style={{ marginLeft: 10 }}
+>
+  検索
+</button>
 
       <table border={1} cellPadding={8}>
         <thead>
@@ -161,6 +246,9 @@ const fetchAI = async (word: string, id: number) => {
     <tr key={w.id}>
       <td>
   {w.word}
+
+  {console.log("w.id:", w.id, "type:", typeof w.id)}
+
   <button
     type="button"
     style={{ marginLeft: 6 }}
@@ -168,6 +256,7 @@ const fetchAI = async (word: string, id: number) => {
   >
     📖
   </button>
+
   <button
     type="button"
     style={{ marginLeft: 6 }}
@@ -175,6 +264,44 @@ const fetchAI = async (word: string, id: number) => {
   >
     🤖
   </button>
+
+  <span
+  onClick={async () => {
+    const isSaved = savedIds.includes(w.id);
+
+    if (isSaved) {
+      await fetch(`/api/save?wordId=${w.id}`, {
+        method: "DELETE",
+      });
+
+      // 🔥 stateから削除
+      setSavedIds((prev) => prev.filter((id) => id !== w.id));
+    } else {
+      await fetch("/api/saved", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          wordId: w.id,
+          content: w.word,
+        }),
+      });
+
+      // 🔥 stateに追加
+      setSavedIds((prev) => [...prev, w.id]);
+    }
+  }}
+  style={{
+    marginLeft: 6,
+    cursor: "pointer",
+    fontSize: 20,
+    color: savedIds.includes(w.id) ? "#facc15" : "#bbb",
+    transition: "0.2s",
+  }}
+>
+  {savedIds.includes(w.id) ? "★" : "☆"}
+</span>
+
+
 </td>
       <td>
   {editingId === w.id ? (
