@@ -86,16 +86,10 @@ const fetchRecentHistory = async () => {
   setHistory(data);
 };
 const fetchSaved = async () => {
-  const res = await fetch("/api/save");
+  const res = await fetch("/api/saved");  // ← 修正
   const data = await res.json();
 
-  console.log("SAVE DATA:", data);
-
-  const ids = data
-    .filter((item: any) => item.word)
-    .map((item: any) => item.word.id);
-
-  console.log("EXTRACTED IDS:", ids);
+  const ids = data.map((item: any) => item.wordId);
 
   setSavedIds(ids);
 };
@@ -270,9 +264,9 @@ useEffect(() => {
     const isSaved = savedIds.includes(w.id);
 
     if (isSaved) {
-      await fetch(`/api/save?wordId=${w.id}`, {
-        method: "DELETE",
-      });
+      await fetch(`/api/saved?wordId=${w.id}`, {  // ← 修正
+  method: "DELETE",
+});
 
       // 🔥 stateから削除
       setSavedIds((prev) => prev.filter((id) => id !== w.id));
