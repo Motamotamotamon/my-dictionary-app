@@ -14,7 +14,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(history);
   } catch (error) {
-    console.error("HISTORY POST ERROR:", error);
+    console.error("POST HISTORY ERROR:", error);
     return NextResponse.json(
       { error: "Failed to save history" },
       { status: 500 }
@@ -24,14 +24,14 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const history = await prisma.searchHistory.findMany({
+    const histories = await prisma.searchHistory.findMany({
       orderBy: { createdAt: "desc" },
-      take: 5,
+      take: 10,
     });
 
-    return NextResponse.json(history);
+    return NextResponse.json(histories);
   } catch (error) {
-    console.error("HISTORY GET ERROR:", error);
+    console.error("GET HISTORY ERROR:", error);
     return NextResponse.json(
       { error: "Failed to fetch history" },
       { status: 500 }

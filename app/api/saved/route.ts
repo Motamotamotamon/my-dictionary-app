@@ -3,23 +3,19 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-    const { wordId, content } = await req.json();
+    const { content } = await req.json();
 
     const saved = await prisma.savedItem.create({
       data: {
         type: "word",
         content,
-        wordId,
       },
     });
 
     return NextResponse.json(saved);
   } catch (error) {
     console.error("SAVE ERROR:", error);
-    return NextResponse.json(
-      { error: "Failed to save" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to save" }, { status: 500 });
   }
 }
 export async function GET() {

@@ -1,60 +1,48 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect,useState } from "react";
+import Link from "next/link";
 
-export default function SavedPage() {
-  const [items, setItems] = useState<any[]>([]);
+export default function SavedPage(){
 
-  const toggleSave = async (wordId: number) => {
-    await fetch(`/api/saved?wordId=${wordId}`, {
-      method: "DELETE",
-    });
+  const [words,setWords] = useState<any[]>([]);
 
-    // UI即反映
-    setItems((prev) =>
-      prev.filter((item) => item.wordId !== wordId)
-    );
-  };
+  useEffect(()=>{
 
-  useEffect(() => {
-    fetch("/api/saved")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("SAVED DATA:", data);
-        setItems(data);
-      });
-  }, []);
+    const fetchWords = async ()=>{
 
-  return (
-    <div style={{ padding: 20 }}>
-      <h1>保存済み単語</h1>
+      const res = await fetch("/api/saved");
+      const data = await res.json();
 
-      {items.length === 0 && <p>まだ保存がありません</p>}
+      setWords(data);
 
-      {items.map((item: any) => (
-        <div
-          key={item.id}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            marginBottom: 8,
-          }}
+    };
+
+    fetchWords();
+
+  },[]);
+
+  return(
+
+    <div className="max-w-xl mx-auto p-6">
+
+      <h1 className="text-3xl font-bold mb-6">
+        Saved Words
+      </h1>
+
+      {words.map((w,i)=>(
+        
+        <Link
+          key={i}
+          href={`/word/${w.content}`}
+          className="block border p-3 mb-2 rounded"
         >
-          <span>{item.word.word}</span>
+          {w.content}
+        </Link>
 
-          <span
-            onClick={() => toggleSave(item.wordId)}
-            style={{
-              cursor: "pointer",
-              fontSize: 20,
-              color: "#facc15",
-            }}
-          >
-            ★
-          </span>
-        </div>
       ))}
+
     </div>
+
   );
 }

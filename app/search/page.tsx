@@ -1,52 +1,41 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function SearchPage() {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<any[]>([]);
+export default function Home() {
 
-  const handleSearch = async () => {
-    if (!query) return;
+  const [word,setWord] = useState("");
+  const router = useRouter();
 
-    const res = await fetch(
-      `https://api.dictionaryapi.dev/api/v2/entries/en/${query}`
-    );
-
-    const data = await res.json();
-
-    setResults(data);
+  const search = () => {
+    if(!word) return;
+    router.push(`/word/${word}`);
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Dictionary Search</h1>
+
+    <div className="flex flex-col items-center justify-center h-screen gap-6">
+
+      <h1 className="text-4xl font-bold">
+        English Dictionary
+      </h1>
 
       <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        value={word}
+        onChange={(e)=>setWord(e.target.value)}
         placeholder="Search word..."
+        className="border p-3 rounded w-64"
       />
 
-      <button onClick={handleSearch}>Search</button>
+      <button
+        onClick={search}
+        className="bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Search
+      </button>
 
-      <div style={{ marginTop: 20 }}>
-        {results.map((entry, i) => (
-          <div key={i}>
-            <h2>{entry.word}</h2>
-
-            {entry.meanings.map((m: any, j: number) => (
-              <div key={j}>
-                <strong>{m.partOfSpeech}</strong>
-
-                {m.definitions.map((d: any, k: number) => (
-                  <p key={k}>• {d.definition}</p>
-                ))}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
     </div>
+
   );
 }
