@@ -8,8 +8,6 @@ export default function Navbar(){
 
       <Link href="/">🏠 Home</Link>
 
-      <Link href="/saved">⭐ Saved</Link>
-
       <Link href="/vocabulary">📚 Vocabulary</Link>
 
       <Link href="/quiz">🧠 Quiz</Link>

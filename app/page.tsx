@@ -2,19 +2,17 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 export default function Home() {
 
   const [word,setWord] = useState("");
-  const [history,setHistory] = useState<string[]>([]);
+  const [history,setHistory] = useState<any[]>([]);
   const router = useRouter();
 
   const search = async () => {
 
     if(!word.trim()) return;
 
-    // 履歴保存
     await fetch("/api/history",{
       method:"POST",
       headers:{ "Content-Type":"application/json" },
@@ -22,7 +20,6 @@ export default function Home() {
     });
 
     router.push(`/search/${word}`);
-
   };
 
   useEffect(()=>{
@@ -42,48 +39,42 @@ export default function Home() {
 
   return (
 
-    <main className="flex flex-col items-center mt-32 gap-8">
+    <main className="flex flex-col items-center justify-center h-[80vh] gap-8">
 
       <h1 className="text-4xl font-bold">
         📘 English Dictionary
       </h1>
 
-      <input
-        value={word}
-        onChange={(e)=>setWord(e.target.value)}
-        placeholder="Search word..."
-        className="border p-3 rounded w-72"
-        onKeyDown={(e)=>{
-          if(e.key === "Enter"){
-            search();
-          }
-        }}
-      />
+      <div className="flex gap-2">
 
-      <div className="flex gap-4">
+        <input
+          value={word}
+          onChange={(e)=>setWord(e.target.value)}
+          placeholder="Search word..."
+          className="border p-3 rounded w-72"
+          onKeyDown={(e)=>{
+            if(e.key === "Enter"){
+              search();
+            }
+          }}
+        />
 
-        <Link href="/saved" className="border px-4 py-2 rounded">
-          ⭐ Saved
-        </Link>
-
-        <Link href="/vocabulary" className="border px-4 py-2 rounded">
-          📚 Vocabulary
-        </Link>
-
-        <Link href="/quiz" className="border px-4 py-2 rounded">
-          🧠 Quiz
-        </Link>
+        <button
+          onClick={search}
+          className="bg-blue-500 text-white px-4 rounded"
+        >
+          Search
+        </button>
 
       </div>
 
-      <div className="mt-8">
+      <div className="mt-6">
 
         <h3 className="font-semibold mb-2">
           Recent Searches
         </h3>
 
         {history.map((h,i)=>(
-
           <div
             key={i}
             className="cursor-pointer text-blue-600"
@@ -91,7 +82,6 @@ export default function Home() {
           >
             {h.query}
           </div>
-
         ))}
 
       </div>

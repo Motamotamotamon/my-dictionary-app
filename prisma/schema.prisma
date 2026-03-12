@@ -32,7 +32,7 @@ model SavedItem {
   wordId    Int?
   word      Word?    @relation(fields: [wordId], references: [id])
   createdAt DateTime @default(now())
-
+  book      String? 
   @@unique([wordId, type])
 }
 model SearchHistory {

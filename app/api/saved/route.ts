@@ -38,13 +38,13 @@ export async function GET() {
 export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const wordId = Number(searchParams.get("wordId"));
+    const content = searchParams.get("content");
 
-    console.log("DELETE wordId:", wordId);
+    console.log("DELETE content:", content);
 
     await prisma.savedItem.deleteMany({
       where: {
-        wordId: wordId,
+        content: content || "",
         type: "word",
       },
     });
@@ -56,6 +56,33 @@ export async function DELETE(req: Request) {
       { error: "Failed to delete" },
       { status: 500 }
     );
+  }
+}
+export async function PATCH(req: Request) {
+  try {
+
+    const { content, book } = await req.json();
+
+    await prisma.savedItem.updateMany({
+      where: {
+        content: content
+      },
+      data: {
+        book: book
+      }
+    });
+
+    return NextResponse.json({ message:"updated" });
+
+  } catch (error) {
+
+    console.error("PATCH ERROR:", error);
+
+    return NextResponse.json(
+      { error:"Failed to update book" },
+      { status:500 }
+    );
+
   }
 }
 
