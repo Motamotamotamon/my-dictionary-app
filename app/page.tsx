@@ -9,19 +9,15 @@ export default function Home() {
   const [history,setHistory] = useState<any[]>([]);
   const router = useRouter();
 
-  const search = async () => {
+  const search = () => {
 
-    if(!word.trim()) return;
+  if(!word.trim()) return;
 
-    await fetch("/api/history",{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ query:word })
-    });
+  console.log("search:", word);
 
-    router.push(`/search/${word}`);
-  };
+  router.push(`/search/${word}`);
 
+};
   useEffect(()=>{
 
     const loadHistory = async ()=>{
@@ -53,18 +49,19 @@ export default function Home() {
           placeholder="Search word..."
           className="border p-3 rounded w-72"
           onKeyDown={(e)=>{
-            if(e.key === "Enter"){
-              search();
-            }
-          }}
+  if(e.key === "Enter"){
+    e.preventDefault();
+    search();
+  }
+}}
         />
 
         <button
-          onClick={search}
-          className="bg-blue-500 text-white px-4 rounded"
-        >
-          Search
-        </button>
+  onClick={() => search()}
+  className="bg-blue-500 text-white px-4 rounded"
+>
+  Search
+</button>
 
       </div>
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import WordCard from "@/components/WordCard";
 
 type Item = {
   id:number
@@ -116,6 +117,9 @@ export default function VocabularyPage(){
     ));
 
   };
+  const book1 = items.filter(i => i.book === "Book1");
+  const book2 = items.filter(i => i.book === "Book2");
+  const others = items.filter(i => !i.book);
 
 
   return(
@@ -127,79 +131,53 @@ export default function VocabularyPage(){
       </h1>
 
 
-      {items.map(item=>(
+      {/* 未分類 */}
+<h2 className="text-xl font-bold mt-6 mb-2">
+📦 Unsorted
+</h2>
 
-        <div
-          key={item.id}
-          className="border p-4 mb-4 rounded"
-        >
+{others.map(item=>(
+  <WordCard
+    key={item.id}
+    word={item.content}
+    definition={item.meaning}
+    partOfSpeech={item.partOfSpeech}
+    jp={item.jp}
+    onRemove={()=>removeWord(item.content)}
+  />
+))}
 
-          <div className="flex items-center gap-2">
+{/* Book1 */}
+<h2 className="text-xl font-bold mt-6 mb-2">
+📚 Book1
+</h2>
 
-            <Link href={`/search/${item.content}`}>
-              <h2 className="text-xl font-bold">
-                {item.content}
-              </h2>
-            </Link>
+{book1.map(item=>(
+  <WordCard
+    key={item.id}
+    word={item.content}
+    definition={item.meaning}
+    partOfSpeech={item.partOfSpeech}
+    jp={item.jp}
+    onRemove={()=>removeWord(item.content)}
+  />
+))}
 
-            <button
-              onClick={()=>speak(item.content)}
-              style={{fontSize:18}}
-            >
-              🔊
-            </button>
+{/* Book2 */}
+<h2 className="text-xl font-bold mt-6 mb-2">
+📚 Book2
+</h2>
 
-          </div>
-
-
-          {item.jp && (
-            <p style={{color:"#2563eb"}}>
-              🇯🇵 {item.jp}
-            </p>
-          )}
-
-
-          <p>{item.meaning}</p>
-
-          <p className="text-gray-500">
-            {item.partOfSpeech}
-          </p>
-
-
-          {item.book && (
-            <p style={{color:"green"}}>
-              📚 {item.book}
-            </p>
-          )}
-
-
-          <div style={{marginTop:10}}>
-
-            <button
-              onClick={() => removeWord(item.content)}
-              style={{ color:"red",marginRight:10 }}
-            >
-              Remove
-            </button>
-
-            <button
-              onClick={()=>moveBook(item.content,"Book1")}
-              style={{marginRight:10}}
-            >
-              Book1
-            </button>
-
-            <button
-              onClick={()=>moveBook(item.content,"Book2")}
-            >
-              Book2
-            </button>
-
-          </div>
-
-        </div>
-
-      ))}
+{book2.map(item=>(
+  <WordCard
+    key={item.id}
+    word={item.content}
+    definition={item.meaning}
+    partOfSpeech={item.partOfSpeech}
+    jp={item.jp}
+    onRemove={()=>removeWord(item.content)}
+  />
+))}
 
     </main>
 

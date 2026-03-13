@@ -9,9 +9,9 @@ export default function WordDetail() {
   const word = params.word as string;
 
   const [data, setData] = useState<any>(null);
-  const [saved, setSaved] = useState(false);
   const [jpWord, setJpWord] = useState("");
   const [jpDefinitions, setJpDefinitions] = useState<any>({});
+  const [isSaved,setIsSaved] = useState(false);
 
   const audio =
     data?.[0]?.phonetics?.find((p:any)=>p.audio)?.audio;
@@ -85,7 +85,11 @@ export default function WordDetail() {
 
       const json = await res.json();
 
-      setData(json);
+if(Array.isArray(json)){
+  setData(json);
+}else{
+  setData([]);
+}
 
       // 単語翻訳
       translateWord(word);
@@ -113,55 +117,75 @@ export default function WordDetail() {
 
   useEffect(()=>{
 
-    const checkSaved = async ()=>{
+  const checkSaved = async ()=>{
+
+    try{
 
       const res = await fetch("/api/saved");
+      const data = await res.json();
 
-      const items = await res.json();
+      const found = data.some((i:any)=>i.content === word);
 
-      const exists = items.some(
-        (item:any)=>item.content === word
-      );
+      setIsSaved(found);
 
-      setSaved(exists);
+    }catch(err){
 
-    };
-
-    if(word) checkSaved();
-
-  },[word]);
-
-  const toggleSave = async ()=>{
-
-    if(!saved){
-
-      await fetch("/api/saved",{
-
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-          content:word
-        })
-
-      });
-
-      setSaved(true);
-
-    }else{
-
-      await fetch(`/api/saved?content=${word}`,{
-        method:"DELETE"
-      });
-
-      setSaved(false);
+      console.error("save check error",err);
 
     }
 
   };
 
+  if(word) checkSaved();
+
+},[word]);
+
+  const toggleSave = async ()=>{
+
+  try{
+
+    if(isSaved){
+
+      await fetch(`/api/saved?content=${word}`,{
+        method:"DELETE"
+      });
+
+      setIsSaved(false);
+
+    }else{
+
+      await fetch("/api/saved",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          content:word,
+          type:"word"
+        })
+      });
+
+      setIsSaved(true);
+
+    }
+
+  }catch(err){
+
+    console.error("save error",err);
+
+  }
+
+};
+
   if(!data) return <div className="p-10">Loading...</div>;
+
+if(data.length === 0){
+  return (
+    <div className="p-10 text-center">
+      <p className="text-xl">Word not found</p>
+    </div>
+  );
+}
 
   return (
 
@@ -199,11 +223,11 @@ export default function WordDetail() {
       </div>
 
       <button
-        onClick={toggleSave}
-        className="text-lg border px-4 py-2 rounded"
-      >
-        {saved ? "★ Saved" : "☆ Save"}
-      </button>
+  onClick={toggleSave}
+  className="border px-4 py-2 rounded"
+>
+  {isSaved ? "⭐ Saved" : "☆ Save"}
+</button>
 
       {/* meanings */}
 
