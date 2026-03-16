@@ -1,21 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import WordCard from "@/components/WordCard";
+import { useRouter } from "next/navigation";
 
 type Item = {
   id:number
   content:string
-  meaning?:string
-  partOfSpeech?:string
-  jp?:string
+  meanings?:any[]
+  phonetic?:string
   book?:string
 }
 
 export default function VocabularyPage(){
 
   const [items,setItems] = useState<Item[]>([]);
+  const [open,setOpen] = useState<{[key:string]:boolean}>({});
+  const [translations,setTranslations] = useState<any>({});
+  const router = useRouter();
 
   useEffect(()=>{
 
@@ -34,33 +35,15 @@ export default function VocabularyPage(){
 
           const d = await r.json();
 
-          const meaning =
-            d?.[0]?.meanings?.[0]?.definitions?.[0]?.definition;
+          const meanings = d?.[0]?.meanings;
 
-          const partOfSpeech =
-            d?.[0]?.meanings?.[0]?.partOfSpeech;
-
-          let jp = "";
-
-          try{
-
-            const tr = await fetch(
-              `https://api.mymemory.translated.net/get?q=${w.content}&langpair=en|ja`
-            );
-
-            const trData = await tr.json();
-
-            jp = trData?.responseData?.translatedText;
-
-          }catch{
-            jp="";
-          }
+          const phonetic =
+            d?.[0]?.phonetics?.find((p:any)=>p.text)?.text;
 
           return {
             ...w,
-            meaning,
-            partOfSpeech,
-            jp
+            meanings,
+            phonetic
           };
 
         })
@@ -76,7 +59,67 @@ export default function VocabularyPage(){
   },[]);
 
 
-  // 発音
+
+  const translate = async (text:string)=>{
+
+    const res = await fetch("/api/translate",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({text})
+    });
+
+    const data = await res.json();
+
+    return data.jp;
+
+  };
+
+
+
+  const toggle = async (word:string)=>{
+
+    const isOpen = !open[word];
+
+    setOpen({
+      ...open,
+      [word]:isOpen
+    });
+
+    if(!isOpen) return;
+
+    const item = items.find(i=>i.content===word);
+
+    if(!item?.meanings) return;
+
+    const newTranslations:any = {...translations};
+
+    for(let i=0;i<item.meanings.length;i++){
+
+      const defs = item.meanings[i].definitions.slice(0,2);
+
+      for(let j=0;j<defs.length;j++){
+
+        const key = `${word}-${i}-${j}`;
+
+        if(!newTranslations[key]){
+
+          const jp = await translate(defs[j].definition);
+
+          newTranslations[key] = jp;
+
+        }
+
+      }
+
+    }
+
+    setTranslations(newTranslations);
+
+  };
+
+
   const speak = (word:string)=>{
 
     const uttr = new SpeechSynthesisUtterance(word);
@@ -86,7 +129,11 @@ export default function VocabularyPage(){
   };
 
 
-  // remove
+  const goDetail = (word:string)=>{
+    router.push(`/detail/${word}`);
+  };
+
+
   const removeWord = async (word:string) => {
 
     await fetch(`/api/saved?content=${word}`,{
@@ -98,8 +145,7 @@ export default function VocabularyPage(){
   };
 
 
-  // 単語帳分類
-  const moveBook = async (word:string,book:string)=>{
+  const updateBook = async (word:string,book:string)=>{
 
     await fetch("/api/saved",{
       method:"PATCH",
@@ -112,14 +158,147 @@ export default function VocabularyPage(){
       })
     });
 
-    setItems(items.map(i=>
-      i.content===word ? {...i,book:book} : i
+    setItems(items.map(i =>
+      i.content===word ? {...i,book} : i
     ));
 
   };
+
+
   const book1 = items.filter(i => i.book === "Book1");
   const book2 = items.filter(i => i.book === "Book2");
   const others = items.filter(i => !i.book);
+
+
+
+  const Card = ({item}:{item:Item}) => (
+
+    <div className="border rounded p-4 mb-3 bg-white shadow-sm">
+
+      <div className="flex justify-between items-center">
+
+        {/* 単語クリックで詳細 */}
+        <button
+          onClick={()=>goDetail(item.content)}
+          className="text-xl font-bold text-left hover:underline"
+        >
+          📖 {item.content}
+        </button>
+
+        <div className="flex items-center gap-2">
+
+          {open[item.content] && (
+            <button
+              onClick={()=>speak(item.content)}
+              className="text-lg"
+            >
+              🔊
+            </button>
+          )}
+
+          {/* 開閉ボタン */}
+          <button
+            onClick={()=>toggle(item.content)}
+            className="text-lg"
+          >
+            {open[item.content] ? "▲" : "▼"}
+          </button>
+
+        </div>
+
+      </div>
+
+
+      {open[item.content] && (
+
+        <div className="mt-3">
+
+          {item.phonetic && (
+            <p className="text-gray-500">
+              {item.phonetic}
+            </p>
+          )}
+
+          {item.meanings?.map((m:any,i:number)=>{
+
+            const posJP = {
+              noun:"名詞",
+              verb:"動詞",
+              adjective:"形容詞",
+              adverb:"副詞"
+            }[m.partOfSpeech] || m.partOfSpeech;
+
+            return(
+
+              <div key={i} className="mt-3">
+
+                <p className="font-semibold">
+                  {posJP}
+                </p>
+
+                <ul className="list-disc ml-5">
+
+                  {m.definitions.slice(0,2).map((d:any,j:number)=>{
+
+                    const key = `${item.content}-${i}-${j}`;
+
+                    return(
+
+                      <li key={j}>
+
+                        {d.definition}
+
+                        <div className="text-gray-600 text-sm">
+                          {translations[key]}
+                        </div>
+
+                      </li>
+
+                    );
+
+                  })}
+
+                </ul>
+
+              </div>
+
+            );
+
+          })}
+
+        </div>
+
+      )}
+
+
+      <div className="flex gap-3 mt-4">
+
+        <button
+          onClick={()=>removeWord(item.content)}
+          className="text-red-600 font-semibold hover:underline"
+        >
+          🗑 Remove
+        </button>
+
+        <button
+          onClick={()=>updateBook(item.content,"Book1")}
+          className="bg-blue-100 px-2 py-1 rounded text-sm"
+        >
+          📘 Book1
+        </button>
+
+        <button
+          onClick={()=>updateBook(item.content,"Book2")}
+          className="bg-green-100 px-2 py-1 rounded text-sm"
+        >
+          📗 Book2
+        </button>
+
+      </div>
+
+    </div>
+
+  );
 
 
   return(
@@ -130,54 +309,29 @@ export default function VocabularyPage(){
         📚 Vocabulary
       </h1>
 
+      <h2 className="text-xl font-bold mt-6 mb-2">
+        📦 Unsorted
+      </h2>
 
-      {/* 未分類 */}
-<h2 className="text-xl font-bold mt-6 mb-2">
-📦 Unsorted
-</h2>
+      {others.map(item=>(
+        <Card key={item.id} item={item}/>
+      ))}
 
-{others.map(item=>(
-  <WordCard
-    key={item.id}
-    word={item.content}
-    definition={item.meaning}
-    partOfSpeech={item.partOfSpeech}
-    jp={item.jp}
-    onRemove={()=>removeWord(item.content)}
-  />
-))}
+      <h2 className="text-xl font-bold mt-6 mb-2">
+        📘 Book1
+      </h2>
 
-{/* Book1 */}
-<h2 className="text-xl font-bold mt-6 mb-2">
-📚 Book1
-</h2>
+      {book1.map(item=>(
+        <Card key={item.id} item={item}/>
+      ))}
 
-{book1.map(item=>(
-  <WordCard
-    key={item.id}
-    word={item.content}
-    definition={item.meaning}
-    partOfSpeech={item.partOfSpeech}
-    jp={item.jp}
-    onRemove={()=>removeWord(item.content)}
-  />
-))}
+      <h2 className="text-xl font-bold mt-6 mb-2">
+        📗 Book2
+      </h2>
 
-{/* Book2 */}
-<h2 className="text-xl font-bold mt-6 mb-2">
-📚 Book2
-</h2>
-
-{book2.map(item=>(
-  <WordCard
-    key={item.id}
-    word={item.content}
-    definition={item.meaning}
-    partOfSpeech={item.partOfSpeech}
-    jp={item.jp}
-    onRemove={()=>removeWord(item.content)}
-  />
-))}
+      {book2.map(item=>(
+        <Card key={item.id} item={item}/>
+      ))}
 
     </main>
 

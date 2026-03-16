@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 type Props = {
   word: string;
   definition?: string;
@@ -30,9 +30,13 @@ export default function WordCard({
 
       <div className="flex justify-between items-center">
 
-        <h3 className="text-xl font-semibold">
-          {word}
-        </h3>
+        <Link href={`/?word=${word}`}>
+
+  <h3 className="text-xl font-semibold hover:underline cursor-pointer">
+    {word}
+  </h3>
+
+</Link>
 
         <button
           onClick={speak}

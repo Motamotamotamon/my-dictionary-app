@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
 export default function WordDetail() {
 
@@ -12,6 +13,11 @@ export default function WordDetail() {
   const [jpWord, setJpWord] = useState("");
   const [jpDefinitions, setJpDefinitions] = useState<any>({});
   const [isSaved,setIsSaved] = useState(false);
+  const [related,setRelated] = useState<any[]>([]);
+  const [synonyms,setSynonyms] = useState<any[]>([]);
+  const [antonyms,setAntonyms] = useState<any[]>([]);
+  const [examples,setExamples] = useState<any[]>([]);
+  const [explain,setExplain] = useState<any>(null);
 
   const audio =
     data?.[0]?.phonetics?.find((p:any)=>p.audio)?.audio;
@@ -79,31 +85,96 @@ export default function WordDetail() {
 
     const fetchWord = async ()=>{
 
-      const res = await fetch(
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
-      );
+      try{
 
-      const json = await res.json();
+        // ⭐並列API
+        const [synRes,antRes,dictRes,relRes] = await Promise.all([
 
-if(Array.isArray(json)){
-  setData(json);
-}else{
-  setData([]);
+          fetch(`https://api.datamuse.com/words?rel_syn=${word}`),
+          fetch(`https://api.datamuse.com/words?rel_ant=${word}`),
+          fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`),
+          fetch(`https://api.datamuse.com/words?ml=${word}`)
+
+        ]);
+
+        const synData = await synRes.json();
+        const antData = await antRes.json();
+        const json = await dictRes.json();
+        const relData = await relRes.json();
+
+        setSynonyms(synData.slice(0,6));
+        setAntonyms(antData.slice(0,6));
+        setRelated(relData.slice(0,8));
+
+        if(Array.isArray(json)){
+          setData(json);
+        }else{
+          setData([]);
+        }
+
+        // 単語翻訳
+        translateWord(word);
+
+        // 意味翻訳
+        const firstDef = json?.[0]?.meanings?.[0]?.definitions?.[0];
+
+        if(firstDef){
+          translateDefinition(firstDef.definition);
+        }
+
+        // ⭐AI examples
+if(examples.length === 0){
+
+  try{
+
+    const ex = await fetch("/api/example",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({word})
+    });
+
+    const exData = await ex.json();
+
+    if(Array.isArray(exData)){
+      setExamples(exData);
+    }
+
+  }catch(err){
+
+    console.error("AI example error",err);
+
+  }
+
 }
 
-      // 単語翻訳
-      translateWord(word);
+// ⭐AI explanation
+try{
 
-      // 意味翻訳
-      json?.[0]?.meanings?.forEach((m:any)=>{
+  const res = await fetch("/api/explain",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({word})
+  });
 
-        m.definitions.forEach((d:any)=>{
+  const data = await res.json();
 
-          translateDefinition(d.definition);
+  setExplain(data);
 
-        });
+}catch(err){
 
-      });
+  console.error("AI explain error",err);
+
+}
+
+      }catch(err){
+
+        console.error("fetch word error",err);
+
+      }
 
     };
 
@@ -117,75 +188,76 @@ if(Array.isArray(json)){
 
   useEffect(()=>{
 
-  const checkSaved = async ()=>{
+    const checkSaved = async ()=>{
+
+      try{
+
+        const res = await fetch("/api/saved");
+        const data = await res.json();
+
+        const found = data.some((i:any)=>i.content === word);
+
+        setIsSaved(found);
+
+      }catch(err){
+
+        console.error("save check error",err);
+
+      }
+
+    };
+
+    if(word) checkSaved();
+
+  },[word]);
+
+  const toggleSave = async ()=>{
 
     try{
 
-      const res = await fetch("/api/saved");
-      const data = await res.json();
+      if(isSaved){
 
-      const found = data.some((i:any)=>i.content === word);
+        await fetch(`/api/saved?content=${word}`,{
+          method:"DELETE"
+        });
 
-      setIsSaved(found);
+        setIsSaved(false);
+
+      }else{
+
+        await fetch("/api/saved",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
+            content:word,
+            type:"word",
+            jp:jpWord
+          })
+        });
+
+        setIsSaved(true);
+
+      }
 
     }catch(err){
 
-      console.error("save check error",err);
+      console.error("save error",err);
 
     }
 
   };
 
-  if(word) checkSaved();
-
-},[word]);
-
-  const toggleSave = async ()=>{
-
-  try{
-
-    if(isSaved){
-
-      await fetch(`/api/saved?content=${word}`,{
-        method:"DELETE"
-      });
-
-      setIsSaved(false);
-
-    }else{
-
-      await fetch("/api/saved",{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-          content:word,
-          type:"word"
-        })
-      });
-
-      setIsSaved(true);
-
-    }
-
-  }catch(err){
-
-    console.error("save error",err);
-
-  }
-
-};
-
   if(!data) return <div className="p-10">Loading...</div>;
 
-if(data.length === 0){
-  return (
-    <div className="p-10 text-center">
-      <p className="text-xl">Word not found</p>
-    </div>
-  );
-}
+  if(data.length === 0){
+    return (
+      <div className="p-10 text-center">
+        <p className="text-xl">Word not found</p>
+      </div>
+    );
+  }
 
   return (
 
@@ -223,16 +295,16 @@ if(data.length === 0){
       </div>
 
       <button
-  onClick={toggleSave}
-  className="border px-4 py-2 rounded"
->
-  {isSaved ? "⭐ Saved" : "☆ Save"}
-</button>
+        onClick={toggleSave}
+        className="border px-4 py-2 rounded"
+      >
+        {isSaved ? "⭐ Saved" : "☆ Save"}
+      </button>
 
       {/* meanings */}
 
       {data[0]?.meanings?.map((m:any,i:number)=>(
-        
+
         <div key={i}>
 
           <h3 className="text-xl font-semibold mb-2">
@@ -240,7 +312,7 @@ if(data.length === 0){
           </h3>
 
           {m.definitions.map((d:any,j:number)=>(
-            
+
             <div key={j} className="mb-4">
 
               <p>• {d.definition}</p>
@@ -263,7 +335,7 @@ if(data.length === 0){
 
       ))}
 
-      {/* example */}
+      {/* Example */}
 
       {example && (
 
@@ -276,6 +348,163 @@ if(data.length === 0){
           <p className="italic mt-2">
             {example}
           </p>
+
+        </div>
+
+      )}
+
+      {/* AI Examples */}
+
+      {examples.length > 0 && (
+
+        <div>
+
+          <h3 className="text-xl font-semibold mt-8">
+            AI Examples
+          </h3>
+
+          <div className="space-y-4 mt-3">
+
+            {examples.map((ex:any,i:number)=>(
+
+              <div key={i} className="border p-3 rounded">
+
+                <p className="font-medium">
+                  {ex.en}
+                </p>
+
+                <p className="text-blue-600 text-sm mt-1">
+                  → {ex.jp}
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      )}
+      {explain && (
+
+<div className="mt-8 border p-4 rounded bg-yellow-50">
+
+<h3 className="text-xl font-semibold mb-3">
+AI Explanation
+</h3>
+
+<p className="mb-2">
+<span className="font-semibold">Meaning:</span>
+<br/>
+{explain.meaning}
+</p>
+
+<p className="mb-2">
+<span className="font-semibold">Nuance:</span>
+<br/>
+{explain.nuance}
+</p>
+
+<p className="mt-3">
+<span className="font-semibold">Example:</span>
+<br/>
+{explain.example}
+</p>
+
+<p className="text-blue-600">
+→ {explain.exampleJP}
+</p>
+
+</div>
+
+)}
+
+      {/* Related */}
+
+      {related.length > 0 && (
+
+        <div>
+
+          <h3 className="text-xl font-semibold mt-8">
+            Related words
+          </h3>
+
+          <div className="flex flex-wrap gap-3 mt-3">
+
+            {related.map((r:any,i:number)=>(
+
+              <Link
+                key={i}
+                href={`/search/${r.word}`}
+                className="px-3 py-1 bg-gray-100 rounded-full hover:bg-blue-100 border text-sm"
+              >
+                {r.word}
+              </Link>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      )}
+
+      {/* Synonyms */}
+
+      {synonyms.length > 0 && (
+
+        <div>
+
+          <h3 className="text-xl font-semibold mt-8">
+            Synonyms
+          </h3>
+
+          <div className="flex flex-wrap gap-2 mt-2">
+
+            {synonyms.map((s:any,i:number)=>(
+
+              <Link
+                key={i}
+                href={`/search/${s.word}`}
+                className="px-3 py-1 bg-green-100 rounded-full border hover:bg-green-200 text-sm"
+              >
+                {s.word}
+              </Link>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      )}
+
+      {/* Antonyms */}
+
+      {antonyms.length > 0 && (
+
+        <div>
+
+          <h3 className="text-xl font-semibold mt-8">
+            Antonyms
+          </h3>
+
+          <div className="flex flex-wrap gap-2 mt-2">
+
+            {antonyms.map((a:any,i:number)=>(
+
+              <Link
+                key={i}
+                href={`/search/${a.word}`}
+                className="px-3 py-1 bg-red-100 rounded-full border hover:bg-red-200 text-sm"
+              >
+                {a.word}
+              </Link>
+
+            ))}
+
+          </div>
 
         </div>
 
