@@ -34,6 +34,8 @@ model SavedItem {
   createdAt DateTime @default(now())
   book      String? 
   jp        String?
+  meanings  Json?
+  phonetic  String?
   @@unique([wordId, type])
 }
 model SearchHistory {

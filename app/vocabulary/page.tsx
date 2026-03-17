@@ -130,8 +130,8 @@ export default function VocabularyPage(){
 
 
   const goDetail = (word:string)=>{
-    router.push(`/detail/${word}`);
-  };
+  router.push(`/search/${word}`);
+};
 
 
   const removeWord = async (word:string) => {

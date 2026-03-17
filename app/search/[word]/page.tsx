@@ -18,6 +18,7 @@ export default function WordDetail() {
   const [antonyms,setAntonyms] = useState<any[]>([]);
   const [examples,setExamples] = useState<any[]>([]);
   const [explain,setExplain] = useState<any>(null);
+  const [showBooks,setShowBooks] = useState(false);
 
   const audio =
     data?.[0]?.phonetics?.find((p:any)=>p.audio)?.audio;
@@ -211,43 +212,60 @@ try{
 
   },[word]);
 
-  const toggleSave = async ()=>{
+  const buildMeanings = () => {
 
-    try{
+  if(!data?.[0]?.meanings) return [];
 
-      if(isSaved){
+  return data[0].meanings.map((m:any)=>({
+    partOfSpeech: m.partOfSpeech,
+    definitions: m.definitions.map((d:any)=>({
+      definition: d.definition,
+      example: d.example || ""
+    }))
+  }));
 
-        await fetch(`/api/saved?content=${word}`,{
-          method:"DELETE"
-        });
+};
 
-        setIsSaved(false);
+  const saveWord = async (book?:string)=>{
 
-      }else{
+  try{
 
-        await fetch("/api/saved",{
-          method:"POST",
-          headers:{
-            "Content-Type":"application/json"
-          },
-          body:JSON.stringify({
-            content:word,
-            type:"word",
-            jp:jpWord
-          })
-        });
+    await fetch("/api/saved",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        content:word,
+        type:"word",
+        jp:jpWord,
+        book:book,
+        phonetic: phonetic,
+        meanings: buildMeanings()   // ⭐これ追加
+      })
+    });
 
-        setIsSaved(true);
+    setIsSaved(true);
+    setShowBooks(false);
 
-      }
+  }catch(err){
 
-    }catch(err){
+    console.error("save error",err);
 
-      console.error("save error",err);
+  }
 
-    }
+};
 
-  };
+    setIsSaved(true);
+    setShowBooks(false);
+
+  }catch(err){
+
+    console.error("save error",err);
+
+  }
+
+};
 
   if(!data) return <div className="p-10">Loading...</div>;
 
@@ -294,12 +312,68 @@ try{
 
       </div>
 
-      <button
-        onClick={toggleSave}
-        className="border px-4 py-2 rounded"
-      >
-        {isSaved ? "⭐ Saved" : "☆ Save"}
-      </button>
+      {!isSaved && (
+
+<div className="space-y-2">
+
+<button
+  onClick={()=>setShowBooks(!showBooks)}
+  className="border px-4 py-2 rounded"
+>
+  ☆ Save
+</button>
+
+{showBooks && (
+
+<div className="flex gap-3">
+
+<button
+  onClick={()=>saveWord("Book1")}
+  className="bg-blue-100 px-3 py-1 rounded"
+>
+  📘 Book1
+</button>
+
+<button
+  onClick={()=>saveWord("Book2")}
+  className="bg-green-100 px-3 py-1 rounded"
+>
+  📗 Book2
+</button>
+
+<button
+  onClick={()=>saveWord()}
+  className="bg-gray-100 px-3 py-1 rounded"
+>
+  Unsorted
+</button>
+
+</div>
+
+)}
+
+</div>
+
+)}
+
+{isSaved && (
+
+<button
+  onClick={async()=>{
+
+    await fetch(`/api/saved?content=${word}`,{
+      method:"DELETE"
+    });
+
+    setIsSaved(false);
+
+  }}
+  className="border px-4 py-2 rounded"
+>
+  ⭐ Saved
+</button>
+
+)}
 
       {/* meanings */}
 

@@ -3,19 +3,34 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-    const { content } = await req.json();
+
+    const {
+      content,
+      jp,
+      phonetic,
+      meanings
+    } = await req.json();
 
     const saved = await prisma.savedItem.create({
       data: {
         type: "word",
         content,
+        jp,
+        phonetic,
+        meanings
       },
     });
 
     return NextResponse.json(saved);
+
   } catch (error) {
+
     console.error("SAVE ERROR:", error);
-    return NextResponse.json({ error: "Failed to save" }, { status: 500 });
+
+    return NextResponse.json(
+      { error: "Failed to save" },
+      { status: 500 }
+    );
   }
 }
 export async function GET() {
@@ -37,25 +52,25 @@ export async function GET() {
 }
 export async function DELETE(req: Request) {
   try {
+
     const { searchParams } = new URL(req.url);
-    const content = searchParams.get("content");
+    const id = Number(searchParams.get("id"));
 
-    console.log("DELETE content:", content);
-
-    await prisma.savedItem.deleteMany({
-      where: {
-        content: content || "",
-        type: "word",
-      },
+    await prisma.savedItem.delete({
+      where: { id }
     });
 
     return NextResponse.json({ message: "Deleted" });
+
   } catch (error) {
+
     console.error("DELETE ERROR:", error);
+
     return NextResponse.json(
       { error: "Failed to delete" },
       { status: 500 }
     );
+
   }
 }
 export async function PATCH(req: Request) {
