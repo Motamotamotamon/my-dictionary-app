@@ -19,6 +19,7 @@ export default function WordDetail() {
   const [examples,setExamples] = useState<any[]>([]);
   const [explain,setExplain] = useState<any>(null);
   const [showBooks,setShowBooks] = useState(false);
+  const [jpExplain,setJpExplain] = useState<any>({});
 
   const audio =
     data?.[0]?.phonetics?.find((p:any)=>p.audio)?.audio;
@@ -41,18 +42,25 @@ export default function WordDetail() {
 
   const translateDefinition = async (text:string) => {
 
-    const res = await fetch(
-      `https://api.mymemory.translated.net/get?q=${text}&langpair=en|ja`
-    );
+  const res = await fetch(
+    `https://api.mymemory.translated.net/get?q=${text}&langpair=en|ja`
+  );
 
-    const data = await res.json();
+  const data = await res.json();
 
-    setJpDefinitions((prev:any)=>({
-      ...prev,
-      [text]: data.responseData.translatedText
-    }));
+  // ⭐ definitions用
+  setJpDefinitions((prev:any)=>({
+    ...prev,
+    [text]: data.responseData.translatedText
+  }));
 
-  };
+  // ⭐ explanation用
+  setJpExplain((prev:any)=>({
+    ...prev,
+    [text]: data.responseData.translatedText
+  }));
+
+};
 
   // -----------------------
   // 単語翻訳
@@ -116,12 +124,22 @@ export default function WordDetail() {
         // 単語翻訳
         translateWord(word);
 
-        // 意味翻訳
-        const firstDef = json?.[0]?.meanings?.[0]?.definitions?.[0];
+        // ⭐ 全definition翻訳
+if(Array.isArray(json)){
 
-        if(firstDef){
-          translateDefinition(firstDef.definition);
-        }
+  json[0]?.meanings?.forEach((m:any)=>{
+
+    m.definitions.forEach((d:any)=>{
+
+      if(d.definition){
+        translateDefinition(d.definition);
+      }
+
+    });
+
+  });
+
+}
 
         // ⭐AI examples
 if(examples.length === 0){
@@ -164,6 +182,13 @@ try{
   const data = await res.json();
 
   setExplain(data);
+  // ⭐ AI explanation翻訳
+if(data?.meaning){
+  translateDefinition(data.meaning);
+}
+if(data?.nuance){
+  translateDefinition(data.nuance);
+}
 
 }catch(err){
 
@@ -212,6 +237,7 @@ try{
 
   },[word]);
 
+
   const buildMeanings = () => {
 
   if(!data?.[0]?.meanings) return [];
@@ -241,20 +267,9 @@ try{
         jp:jpWord,
         book:book,
         phonetic: phonetic,
-        meanings: buildMeanings()   // ⭐これ追加
+        meanings: buildMeanings()
       })
     });
-
-    setIsSaved(true);
-    setShowBooks(false);
-
-  }catch(err){
-
-    console.error("save error",err);
-
-  }
-
-};
 
     setIsSaved(true);
     setShowBooks(false);
@@ -472,12 +487,22 @@ AI Explanation
 <span className="font-semibold">Meaning:</span>
 <br/>
 {explain.meaning}
+{jpExplain[explain.meaning] && (
+  <p className="text-blue-600">
+    → {jpExplain[explain.meaning]}
+  </p>
+)}
 </p>
 
 <p className="mb-2">
 <span className="font-semibold">Nuance:</span>
 <br/>
 {explain.nuance}
+{jpExplain[explain.nuance] && (
+  <p className="text-blue-600">
+    → {jpExplain[explain.nuance]}
+  </p>
+)}
 </p>
 
 <p className="mt-3">
@@ -504,21 +529,22 @@ AI Explanation
             Related words
           </h3>
 
-          <div className="flex flex-wrap gap-3 mt-3">
+          <div className="mt-4 space-y-2">
 
-            {related.map((r:any,i:number)=>(
+  {related.map((r:any,i:number)=>(
 
-              <Link
-                key={i}
-                href={`/search/${r.word}`}
-                className="px-3 py-1 bg-gray-100 rounded-full hover:bg-blue-100 border text-sm"
-              >
-                {r.word}
-              </Link>
+    <Link
+      key={i}
+      href={`/search/${r.word}`}
+      className="flex justify-between items-center px-4 py-3 border rounded-lg hover:bg-blue-50 transition"
+    >
+      <span>{r.word}</span>
+      <span className="text-gray-400">→</span>
+    </Link>
 
-            ))}
+  ))}
 
-          </div>
+</div>
 
         </div>
 
@@ -534,21 +560,22 @@ AI Explanation
             Synonyms
           </h3>
 
-          <div className="flex flex-wrap gap-2 mt-2">
+          <div className="mt-4 space-y-2">
 
-            {synonyms.map((s:any,i:number)=>(
+  {synonyms.map((s:any,i:number)=>(
 
-              <Link
-                key={i}
-                href={`/search/${s.word}`}
-                className="px-3 py-1 bg-green-100 rounded-full border hover:bg-green-200 text-sm"
-              >
-                {s.word}
-              </Link>
+    <Link
+      key={i}
+      href={`/search/${s.word}`}
+      className="flex justify-between items-center px-4 py-3 border rounded-lg hover:bg-blue-50 transition"
+    >
+      <span>{s.word}</span>
+      <span className="text-gray-400">→</span>
+    </Link>
 
-            ))}
+  ))}
 
-          </div>
+</div>
 
         </div>
 
@@ -564,21 +591,22 @@ AI Explanation
             Antonyms
           </h3>
 
-          <div className="flex flex-wrap gap-2 mt-2">
+          <div className="mt-4 space-y-2">
 
-            {antonyms.map((a:any,i:number)=>(
+  {antonyms.map((a:any,i:number)=>(
 
-              <Link
-                key={i}
-                href={`/search/${a.word}`}
-                className="px-3 py-1 bg-red-100 rounded-full border hover:bg-red-200 text-sm"
-              >
-                {a.word}
-              </Link>
+    <Link
+      key={i}
+      href={`/search/${a.word}`}
+      className="flex justify-between items-center px-4 py-3 border rounded-lg hover:bg-blue-50 transition"
+    >
+      <span>{a.word}</span>
+      <span className="text-gray-400">→</span>
+    </Link>
 
-            ))}
+  ))}
 
-          </div>
+</div>
 
         </div>
 
