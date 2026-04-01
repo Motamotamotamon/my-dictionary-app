@@ -3,28 +3,52 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-
     const {
       content,
       jp,
       phonetic,
-      meanings
+      meanings,
+      book
     } = await req.json();
 
-    const saved = await prisma.savedItem.create({
-      data: {
-        type: "word",
+    // 🔥 既にあるかチェック
+    const existing = await prisma.savedItem.findFirst({
+      where: {
         content,
-        jp,
-        phonetic,
-        meanings
-      },
+        type: "word"
+      }
     });
+
+    let saved;
+
+    if (existing) {
+      // 🔥 あれば更新（重複防止）
+      saved = await prisma.savedItem.update({
+        where: { id: existing.id },
+        data: {
+          jp,
+          phonetic,
+          meanings,
+          book: book || "Unsorted"
+        }
+      });
+    } else {
+      // 🔥 なければ新規作成
+      saved = await prisma.savedItem.create({
+        data: {
+          type: "word",
+          content,
+          jp,
+          phonetic,
+          meanings,
+          book: book || "Unsorted"
+        },
+      });
+    }
 
     return NextResponse.json(saved);
 
   } catch (error) {
-
     console.error("SAVE ERROR:", error);
 
     return NextResponse.json(
@@ -33,12 +57,12 @@ export async function POST(req: Request) {
     );
   }
 }
+
 export async function GET() {
   try {
     const items = await prisma.savedItem.findMany({
       where: { type: "word" },
       orderBy: { createdAt: "desc" },
-      include: { word: true },
     });
 
     return NextResponse.json(items);
@@ -50,56 +74,50 @@ export async function GET() {
     );
   }
 }
+
 export async function DELETE(req: Request) {
   try {
-
     const { searchParams } = new URL(req.url);
-    const id = Number(searchParams.get("id"));
+    const content = searchParams.get("content");
 
-    await prisma.savedItem.delete({
-      where: { id }
+    await prisma.savedItem.deleteMany({
+      where: {
+        content: content || "",
+        type: "word"
+      }
     });
 
     return NextResponse.json({ message: "Deleted" });
 
   } catch (error) {
-
-    console.error("DELETE ERROR:", error);
-
     return NextResponse.json(
       { error: "Failed to delete" },
       { status: 500 }
     );
-
   }
 }
 export async function PATCH(req: Request) {
   try {
-
     const { content, book } = await req.json();
 
     await prisma.savedItem.updateMany({
       where: {
-        content: content
+        content,
+        type: "word"
       },
       data: {
-        book: book
+        book: book || "Unsorted"
       }
     });
 
-    return NextResponse.json({ message:"updated" });
+    return NextResponse.json({ message: "updated" });
 
   } catch (error) {
-
     console.error("PATCH ERROR:", error);
 
     return NextResponse.json(
-      { error:"Failed to update book" },
-      { status:500 }
+      { error: "Failed to update book" },
+      { status: 500 }
     );
-
   }
 }
-
-
-

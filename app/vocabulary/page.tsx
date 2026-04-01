@@ -16,47 +16,37 @@ export default function VocabularyPage(){
   const [items,setItems] = useState<Item[]>([]);
   const [open,setOpen] = useState<{[key:string]:boolean}>({});
   const [translations,setTranslations] = useState<any>({});
+  const [activeTab, setActiveTab] = useState("Book1");
   const router = useRouter();
 
   useEffect(()=>{
 
-    const load = async ()=>{
+  const load = async ()=>{
+
+    try{
 
       const res = await fetch("/api/saved");
-      const saved = await res.json();
+      const data = await res.json();
 
-      const enriched = await Promise.all(
+      console.log("saved data", data); // 🔍 デバッグ
 
-        saved.map(async (w:any)=>{
+      // 🔥 ここが重要
+      if(Array.isArray(data)){
+        setItems(data);
+      }else{
+        setItems([]); // エラー回避
+      }
 
-          const r = await fetch(
-            `https://api.dictionaryapi.dev/api/v2/entries/en/${w.content}`
-          );
+    }catch(err){
+      console.error(err);
+      setItems([]);
+    }
 
-          const d = await r.json();
+  };
 
-          const meanings = d?.[0]?.meanings;
+  load();
 
-          const phonetic =
-            d?.[0]?.phonetics?.find((p:any)=>p.text)?.text;
-
-          return {
-            ...w,
-            meanings,
-            phonetic
-          };
-
-        })
-
-      );
-
-      setItems(enriched);
-
-    };
-
-    load();
-
-  },[]);
+},[]);
 
 
 
@@ -136,14 +126,17 @@ export default function VocabularyPage(){
 
   const removeWord = async (word:string) => {
 
-    await fetch(`/api/saved?content=${word}`,{
-      method:"DELETE"
-    });
+  await fetch(`/api/saved?content=${word}`,{
+    method:"DELETE"
+  });
 
-    setItems(items.filter(i => i.content !== word));
+  const res = await fetch("/api/saved");
+  const data = await res.json();
 
-  };
-
+  if(Array.isArray(data)){
+    setItems(data);
+  }
+};
 
   const updateBook = async (word:string,book:string)=>{
 
@@ -158,7 +151,7 @@ export default function VocabularyPage(){
       })
     });
 
-    setItems(items.map(i =>
+    setItems(currentItems.map(i =>
       i.content===word ? {...i,book} : i
     ));
 
@@ -167,7 +160,13 @@ export default function VocabularyPage(){
 
   const book1 = items.filter(i => i.book === "Book1");
   const book2 = items.filter(i => i.book === "Book2");
-  const others = items.filter(i => !i.book);
+  const others = items.filter(i => !i.book || i.book === "Unsorted");
+
+  let currentItems: Item[] = [];
+
+if (activeTab === "Book1") currentItems = book1;
+if (activeTab === "Book2") currentItems = book2;
+if (activeTab === "Unsorted") currentItems = others;
 
 
 
@@ -309,29 +308,52 @@ export default function VocabularyPage(){
         📚 Vocabulary
       </h1>
 
-      <h2 className="text-xl font-bold mt-6 mb-2">
-        📦 Unsorted
-      </h2>
+      {/* 🔥 タブUI */}
+<div className="flex gap-2 mb-6 justify-center">
 
-      {others.map(item=>(
-        <Card key={item.id} item={item}/>
-      ))}
+  <button
+    onClick={() => setActiveTab("Book1")}
+    className={`px-4 py-2 rounded-lg border transition ${
+      activeTab === "Book1"
+        ? "bg-blue-500 text-white"
+        : "bg-white"
+    }`}
+  >
+    📘 Book1 ({book1.length})
+  </button>
 
-      <h2 className="text-xl font-bold mt-6 mb-2">
-        📘 Book1
-      </h2>
+  <button
+    onClick={() => setActiveTab("Book2")}
+    className={`px-4 py-2 rounded-lg border transition ${
+      activeTab === "Book2"
+        ? "bg-green-500 text-white"
+        : "bg-white"
+    }`}
+  >
+    📗 Book2 ({book2.length})
+  </button>
 
-      {book1.map(item=>(
-        <Card key={item.id} item={item}/>
-      ))}
+  <button
+    onClick={() => setActiveTab("Unsorted")}
+    className={`px-4 py-2 rounded-lg border transition ${
+      activeTab === "Unsorted"
+        ? "bg-gray-500 text-white"
+        : "bg-white"
+    }`}
+  >
+    📂 Others ({others.length})
+  </button>
 
-      <h2 className="text-xl font-bold mt-6 mb-2">
-        📗 Book2
-      </h2>
+</div>
 
-      {book2.map(item=>(
-        <Card key={item.id} item={item}/>
-      ))}
+{/* 🔥 表示部分 */}
+{currentItems.length === 0 && (
+  <p className="text-gray-400">No words yet</p>
+)}
+
+{currentItems.map(item => (
+  <Card key={item.id} item={item}/>
+))}
 
     </main>
 

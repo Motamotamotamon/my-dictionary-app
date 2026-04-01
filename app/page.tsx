@@ -14,25 +14,26 @@ export default function Home() {
 
   if(!word.trim()) return;
 
-  await fetch("/api/history",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-  query:word,
-  mode:"word"
-})
-  });
+  try{
+    await fetch("/api/history",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({
+        query:word,
+        mode:"word"
+      })
+    });
 
-  // 履歴再取得
-  const res = await fetch("/api/history");
-  const data = await res.json();
-  setHistory(prev=>{
-  const filtered = prev.filter(h=>h.query !== word)
-  return [{query:word},...filtered].slice(0,5)
-})
+    const res = await fetch("/api/history");
+    const data = await res.json();
+    setHistory(data.slice(0,5));
 
+  }catch(err){
+    console.error(err);
+  }
+
+  // 🔥 最後に遷移
   router.push(`/search/${word}`);
-
 };
   useEffect(()=>{
 
@@ -60,55 +61,57 @@ export default function Home() {
 
   return (
 
-<main className="flex flex-col items-center justify-center min-h-screen gap-8">
+<main className="flex flex-col items-center justify-center min-h-screen px-4">
 
-  <h1 className="text-4xl font-bold">
-    📘 English Dictionary
-  </h1>
+  <div className="flex flex-col items-center gap-8 w-full max-w-md">
 
-  <div className="flex gap-2">
+    <h1 className="text-4xl font-bold text-center">
+      📘 English Dictionary
+    </h1>
 
-    <input
-      value={word}
-      onChange={(e)=>setWord(e.target.value)}
-      placeholder="Search word..."
-      className="border p-3 rounded w-72"
-      onKeyDown={(e)=>{
-        if(e.key === "Enter"){
-          e.preventDefault();
-          search();
-        }
-      }}
-    />
+    <div className="flex gap-2 w-full">
 
-    <button
-      onClick={() => search()}
-      className="bg-blue-500 text-white px-4 rounded"
-    >
-      Search
-    </button>
+      <input
+        value={word}
+        onChange={(e)=>setWord(e.target.value)}
+        placeholder="Search word..."
+        className="border p-3 rounded w-full"
+        onKeyDown={(e)=>{
+          if(e.key === "Enter"){
+            e.preventDefault();
+            search();
+          }
+        }}
+      />
 
-  </div>
+      <button
+        onClick={() => search()}
+        className="bg-blue-500 text-white px-4 rounded whitespace-nowrap"
+      >
+        Search
+      </button>
 
-  <div className="flex flex-col items-center mt-6">
+    </div>
 
-    <h3 className="font-semibold mb-2">
-      Recent Searches
-    </h3>
+    <div className="flex flex-col items-center w-full">
 
-    <div className="space-y-1 text-center">
+      <h3 className="font-semibold mb-2">
+        Recent Searches
+      </h3>
 
-      {history.map((h,i)=>(
+      <div className="space-y-1 text-center w-full">
 
-        <div
-          key={i}
-          className="cursor-pointer text-blue-600 hover:underline"
-          onClick={()=>router.push(`/search/${h.query}`)}
-        >
-          {h.query}
-        </div>
+        {history.map((h,i)=>(
+          <div
+            key={i}
+            className="cursor-pointer text-blue-600 hover:underline"
+            onClick={()=>router.push(`/search/${h.query}`)}
+          >
+            {h.query}
+          </div>
+        ))}
 
-      ))}
+      </div>
 
     </div>
 

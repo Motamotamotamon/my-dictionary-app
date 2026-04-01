@@ -13,6 +13,7 @@ export default function WordDetail() {
   const [jpWord, setJpWord] = useState("");
   const [jpDefinitions, setJpDefinitions] = useState<any>({});
   const [isSaved,setIsSaved] = useState(false);
+  const [animate,setAnimate] = useState<"idle" | "big" | "small">("idle");
   const [related,setRelated] = useState<any[]>([]);
   const [synonyms,setSynonyms] = useState<any[]>([]);
   const [antonyms,setAntonyms] = useState<any[]>([]);
@@ -41,6 +42,8 @@ export default function WordDetail() {
   // -----------------------
 
   const translateDefinition = async (text:string) => {
+    // 🔥 すでに翻訳済みならスキップ
+  if(jpDefinitions[text]) return;
 
   const res = await fetch(
     `https://api.mymemory.translated.net/get?q=${text}&langpair=en|ja`
@@ -252,7 +255,9 @@ if(data?.nuance){
 
 };
 
-  const saveWord = async (book?:string)=>{
+  // 🔥 変更点だけじゃなく全部コピペOK
+
+const saveWord = async (book?:string)=>{
 
   try{
 
@@ -263,9 +268,8 @@ if(data?.nuance){
       },
       body:JSON.stringify({
         content:word,
-        type:"word",
         jp:jpWord,
-        book:book,
+        book:book || "Unsorted",
         phonetic: phonetic,
         meanings: buildMeanings()
       })
@@ -274,14 +278,44 @@ if(data?.nuance){
     setIsSaved(true);
     setShowBooks(false);
 
+    // 👇ここに追加
+    console.log("animate start");
+
+    setAnimate("big");
+
+    setTimeout(()=>{
+      console.log("animate small");
+      setAnimate("small");
+    },300);
+
+    setTimeout(()=>{
+      console.log("animate idle");
+      setAnimate("idle");
+    },800);
+
   }catch(err){
-
     console.error("save error",err);
-
   }
 
 };
+const removeWord = async () => {
 
+  await fetch(`/api/saved?content=${word}`, {
+    method: "DELETE"
+  });
+
+  setIsSaved(false);
+};
+
+const toggleSave = async () => {
+
+  if (isSaved) {
+    await removeWord();
+  } else {
+    setShowBooks(true);
+  }
+
+};
   if(!data) return <div className="p-10">Loading...</div>;
 
   if(data.length === 0){
@@ -327,68 +361,50 @@ if(data?.nuance){
 
       </div>
 
-      {!isSaved && (
-
-<div className="space-y-2">
+      <div className="space-y-2">
 
 <button
-  onClick={()=>setShowBooks(!showBooks)}
-  className="border px-4 py-2 rounded"
+  onClick={toggleSave}
+  style={{
+  transform:
+    animate === "big"
+      ? "scale(1.12)"
+      : animate === "small"
+      ? "scale(0.97)"
+      : "scale(1)"
+}}
+  className={`
+    px-4 py-2 rounded-xl border
+    transition-all duration-500 ease-out
+    ${isSaved 
+      ? "bg-yellow-400 text-white border-yellow-400"
+      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+    }
+  `}
 >
-  ☆ Save
+  {isSaved ? "★ Saved" : "☆ Save"}
 </button>
 
-{showBooks && (
+{showBooks && !isSaved && (
 
-<div className="flex gap-3">
+  <div className="flex gap-2 mt-3">
+    <button onClick={() => saveWord("Book1")} className="px-3 py-1 border rounded">
+      📘 Book1
+    </button>
 
-<button
-  onClick={()=>saveWord("Book1")}
-  className="bg-blue-100 px-3 py-1 rounded"
->
-  📘 Book1
-</button>
+    <button onClick={() => saveWord("Book2")} className="px-3 py-1 border rounded">
+      📗 Book2
+    </button>
 
-<button
-  onClick={()=>saveWord("Book2")}
-  className="bg-green-100 px-3 py-1 rounded"
->
-  📗 Book2
-</button>
-
-<button
-  onClick={()=>saveWord()}
-  className="bg-gray-100 px-3 py-1 rounded"
->
-  Unsorted
-</button>
-
-</div>
+    <button onClick={() => saveWord("Unsorted")} className="px-3 py-1 border rounded">
+      📂 Unsorted
+    </button>
+  </div>
 
 )}
 
 </div>
 
-)}
-
-{isSaved && (
-
-<button
-  onClick={async()=>{
-
-    await fetch(`/api/saved?content=${word}`,{
-      method:"DELETE"
-    });
-
-    setIsSaved(false);
-
-  }}
-  className="border px-4 py-2 rounded"
->
-  ⭐ Saved
-</button>
-
-)}
 
       {/* meanings */}
 
