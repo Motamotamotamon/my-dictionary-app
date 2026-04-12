@@ -10,58 +10,69 @@ export default function Home() {
   const [history,setHistory] = useState<any[]>([]);
   const router = useRouter();
   const params = useSearchParams();
+
   const search = async () => {
 
-  if(!word.trim()) return;
+    if(!word.trim()) return;
 
-  try{
-    await fetch("/api/history",{
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({
-        query:word,
-        mode:"word"
-      })
-    });
+    try{
+      await fetch("/api/history",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+          query:word,
+          mode:"word"
+        })
+      });
 
-    const res = await fetch("/api/history");
-    const data = await res.json();
-    setHistory(data.slice(0,5));
+      const res = await fetch("/api/history");
+      const data = await res.json();
+      setHistory(data.slice(0,5));
 
-  }catch(err){
-    console.error(err);
-  }
+    }catch(err){
+      console.error(err);
+    }
 
-  // 🔥 最後に遷移
-  router.push(`/search/${word}`);
-};
-  useEffect(()=>{
-
-  const w = params.get("word");
-
-  if(w){
-    setWord(w);
-    router.push(`/search/${w}`);
-  }
-
-  const loadHistory = async ()=>{
-
-    const res = await fetch("/api/history");
-    const data = await res.json();
-
-    console.log("history",data);   // ←追加
-
-    setHistory(data.slice(0,5));
-
+    router.push(`/search/${word}`);
   };
 
-  loadHistory();
+  useEffect(()=>{
 
-},[]);
+    const w = params.get("word");
+
+    if(w){
+      setWord(w);
+      router.push(`/search/${w}`);
+    }
+
+    const loadHistory = async ()=>{
+
+      try{
+        const res = await fetch("/api/history");
+        const data = await res.json();
+
+        console.log("history",data);
+
+        if(Array.isArray(data)){
+          setHistory(data.slice(0,5));
+        }else{
+          setHistory([]);
+        }
+
+      }catch(err){
+        console.error("history load error", err);
+        setHistory([]);
+      }
+
+    };
+
+    loadHistory();
+
+  },[]);
 
   return (
 
-<main className="flex flex-col items-center justify-center min-h-screen px-4">
+<main className="flex flex-col items-center justify-center min-h-screen px-4 pb-20">
 
   <div className="flex flex-col items-center gap-8 w-full max-w-md">
 
@@ -93,27 +104,42 @@ export default function Home() {
 
     </div>
 
-    <div className="flex flex-col items-center w-full">
+    {/* 🔥 履歴UI 改善版 */}
+    {history.length > 0 && (
 
-      <h3 className="font-semibold mb-2">
-        Recent Searches
-      </h3>
+      <div className="flex flex-col items-center w-full">
 
-      <div className="space-y-1 text-center w-full">
+        <h3 className="font-semibold mb-3">
+          🕘 Recent Searches
+        </h3>
 
-        {history.map((h,i)=>(
-          <div
-            key={i}
-            className="cursor-pointer text-blue-600 hover:underline"
-            onClick={()=>router.push(`/search/${h.query}`)}
-          >
-            {h.query}
-          </div>
-        ))}
+        <div className="flex flex-wrap gap-2 justify-center">
+
+          {history.map((h,i)=>(
+            <button
+              key={i}
+              onClick={()=>router.push(`/search/${h.query}`)}
+              className={`
+                px-3 py-1 rounded-full text-sm border transition
+
+                ${i === 0 
+                  ? "bg-blue-500 text-white border-blue-500 font-semibold"
+                  : "bg-gray-100 hover:bg-gray-200"
+                }
+              `}
+            >
+              {h.query}
+              <span className="ml-1 text-xs opacity-70">
+                ({h.mode})
+              </span>
+            </button>
+          ))}
+
+        </div>
 
       </div>
 
-    </div>
+    )}
 
   </div>
 

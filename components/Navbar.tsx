@@ -8,24 +8,34 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const linkClass = (path:string) =>
-    pathname === path
-      ? "font-bold text-blue-600"
-      : "text-gray-700";
+    `flex flex-col items-center text-xs ${
+      pathname === path
+        ? "text-blue-600 font-bold"
+        : "text-gray-500"
+    }`;
 
   return (
 
-    <nav className="flex gap-6 p-4 border-b bg-white">
+    <nav className="
+      fixed bottom-0 left-0 right-0
+      bg-white border-t
+      flex justify-around items-center
+      py-2 z-50
+    ">
 
       <Link href="/" className={linkClass("/")}>
-        🔍 Search
+        <span className="text-lg">🔍</span>
+        Search
       </Link>
 
       <Link href="/vocabulary" className={linkClass("/vocabulary")}>
-        📚 Vocabulary
+        <span className="text-lg">📚</span>
+        Vocabulary
       </Link>
 
       <Link href="/quiz" className={linkClass("/quiz")}>
-        🧠 Quiz
+        <span className="text-lg">🧠</span>
+        Quiz
       </Link>
 
     </nav>

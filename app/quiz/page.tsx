@@ -1,24 +1,45 @@
 "use client";
 
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Quiz(){
+type Item = {
+  id:number;
+  content:string;
+  jp?:string;
+  book?:string;
+};
 
-  const [word,setWord] = useState<any>(null);
+export default function QuizPage(){
 
+  const [items,setItems] = useState<Item[]>([]);
+  const [filtered,setFiltered] = useState<Item[]>([]);
+  const [current,setCurrent] = useState<Item | null>(null);
+  const [choices,setChoices] = useState<string[]>([]);
+  const [result,setResult] = useState<"correct" | "wrong" | null>(null);
+  const [selected,setSelected] = useState<string | null>(null);
+
+  const [score,setScore] = useState(0);
+  const [total,setTotal] = useState(0);
+  const [streak,setStreak] = useState(0);
+
+  const [animate,setAnimate] = useState(false);
+  const [selectedBook,setSelectedBook] = useState("All");
+
+  // -----------------------
+  // データ取得
+  // -----------------------
   useEffect(()=>{
 
     const load = async ()=>{
 
       const res = await fetch("/api/saved");
-      const words = await res.json();
+      const data = await res.json();
 
-      if(words.length === 0) return;
-
-      const random =
-        words[Math.floor(Math.random()*words.length)];
-
-      setWord(random.content);
+      if(Array.isArray(data)){
+        const valid = data.filter((i:Item)=>i.jp);
+        setItems(valid);
+        setFiltered(valid);
+      }
 
     };
 
@@ -26,23 +47,199 @@ export default function Quiz(){
 
   },[]);
 
-  if(!word) return <div>No saved words</div>;
+  // -----------------------
+  // Bookフィルター
+  // -----------------------
+  useEffect(()=>{
 
-  return(
+    if(selectedBook === "All"){
+      setFiltered(items);
+    }else{
+      setFiltered(items.filter(i=>i.book === selectedBook));
+    }
 
-    <div className="flex flex-col items-center p-10">
+  },[selectedBook,items]);
 
-      <h1 className="text-3xl mb-6">
-        What does this word mean?
+  // -----------------------
+  // 問題作成
+  // -----------------------
+  const generateQuiz = () => {
+
+    if(filtered.length < 4) return;
+
+    const shuffled = [...filtered].sort(()=>0.5 - Math.random());
+
+    const correct = shuffled[0];
+    const wrongs = shuffled.slice(1,4);
+
+    const options = [correct.jp!, ...wrongs.map(w=>w.jp!)]
+      .sort(()=>0.5 - Math.random());
+
+    setCurrent(correct);
+    setChoices(options);
+    setResult(null);
+    setSelected(null);
+    setAnimate(false);
+
+  };
+
+  useEffect(()=>{
+    if(filtered.length > 0){
+      generateQuiz();
+    }
+  },[filtered]);
+
+  // -----------------------
+  // 回答
+  // -----------------------
+  const answer = (choice:string) => {
+
+    if(!current || result) return;
+
+    setSelected(choice);
+    setTotal(prev=>prev+1);
+
+    if(choice === current.jp){
+
+      setResult("correct");
+      setScore(prev=>prev+1);
+      setStreak(prev=>prev+1);
+
+      // 🔥 アニメーション
+      setAnimate(true);
+      setTimeout(()=>setAnimate(false),400);
+
+    }else{
+
+      setResult("wrong");
+      setStreak(0);
+
+    }
+
+  };
+
+  if(filtered.length < 4){
+    return (
+      <div className="p-10 text-center">
+        <p>Not enough words 😢</p>
+      </div>
+    );
+  }
+
+  if(!current){
+    return <div className="p-10">Loading...</div>;
+  }
+
+  return (
+
+    <main className="max-w-md mx-auto p-6 text-center space-y-6 pb-20">
+
+      <h1 className="text-2xl font-bold">
+        🧠 Quiz
       </h1>
 
-      <h2 className="text-4xl font-bold mb-6">
-        {word}
-      </h2>
+      {/* 🔥 Book選択 */}
+      <div className="flex justify-center gap-2">
 
-      <p>Think about the meaning!</p>
+        {["All","Book1","Book2","Unsorted"].map((b)=>(
+          <button
+            key={b}
+            onClick={()=>setSelectedBook(b)}
+            className={`
+              px-3 py-1 rounded-full border text-sm
+              ${selectedBook === b
+                ? "bg-blue-500 text-white"
+                : "bg-gray-100"
+              }
+            `}
+          >
+            {b}
+          </button>
+        ))}
 
-    </div>
+      </div>
+
+      {/* 🔥 スコア */}
+      <div className="text-gray-600">
+        Score: {score} / {total}
+      </div>
+
+      {/* 🔥 streak */}
+      <div className="text-orange-500 font-semibold">
+        🔥 Streak: {streak}
+      </div>
+
+      {/* 🔥 問題（アニメ付き） */}
+      <div
+        className="text-3xl font-semibold transition-transform duration-300"
+        style={{
+          transform: animate ? "scale(1.15)" : "scale(1)"
+        }}
+      >
+        {current.content}
+      </div>
+
+      <div className="space-y-3">
+
+        {choices.map((c,i)=>{
+
+          let bg = "bg-white";
+
+          if(result){
+
+            if(c === current.jp){
+              bg = "bg-green-300";
+            }else if(c === selected){
+              bg = "bg-red-300";
+            }
+
+          }
+
+          return(
+            <button
+              key={i}
+              onClick={()=>answer(c)}
+              className={`w-full border p-3 rounded ${bg}`}
+            >
+              {c}
+            </button>
+          );
+
+        })}
+
+      </div>
+
+      {/* 🔥 結果 */}
+      {result && (
+        <div className="text-xl font-bold">
+
+          {result === "correct" ? (
+            <div className="text-green-600">
+              ✅ Correct!
+            </div>
+          ) : (
+            <div className="text-red-600">
+              ❌ Wrong
+              <div className="mt-2 text-black">
+                正解: {current.jp}
+              </div>
+            </div>
+          )}
+
+        </div>
+      )}
+
+      {result && (
+        <button
+          onClick={generateQuiz}
+          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Next
+        </button>
+      )}
+
+    </main>
 
   );
+
 }

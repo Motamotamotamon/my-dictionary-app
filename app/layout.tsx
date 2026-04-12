@@ -16,9 +16,10 @@ export default function RootLayout({
 
       <body>
 
-        <Navbar />
-
         {children}
+
+        {/* 👇 下に移動 */}
+        <Navbar />
 
       </body>
 

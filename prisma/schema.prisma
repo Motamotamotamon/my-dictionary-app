@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,35 +8,35 @@ datasource db {
 }
 
 model Word {
-  id           Int      @id @default(autoincrement())
+  id           Int         @id @default(autoincrement())
   word         String
-  meaning      String?
-  definition   String?
   partOfSpeech String?
+  definition   String?
+  meaning      String?
   example      String?
+  createdAt    DateTime    @default(now())
   aiAnalysis   Json?
-  createdAt    DateTime @default(now())
-
   savedItems   SavedItem[]
 }
+
 model SavedItem {
   id        Int      @id @default(autoincrement())
-  content   String
   type      String
+  content   String
   wordId    Int?
-  word      Word?    @relation(fields: [wordId], references: [id])
   createdAt DateTime @default(now())
-  book      String? 
+  book      String?
   jp        String?
   meanings  Json?
   phonetic  String?
+  word      Word?    @relation(fields: [wordId], references: [id])
+
   @@unique([wordId, type])
 }
+
 model SearchHistory {
   id        Int      @id @default(autoincrement())
   query     String
-  mode      String   // "en-ja" | "ja-en" | "en-en"
+  mode      String
   createdAt DateTime @default(now())
 }
-
-
