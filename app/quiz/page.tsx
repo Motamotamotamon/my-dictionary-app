@@ -25,6 +25,10 @@ export default function QuizPage(){
   const [animate,setAnimate] = useState(false);
   const [selectedBook,setSelectedBook] = useState("All");
 
+  const [translations,setTranslations] = useState<{[key:string]:string}>({});
+
+  const MAX_QUESTIONS = 10;
+
   // -----------------------
   // データ取得
   // -----------------------
@@ -36,9 +40,8 @@ export default function QuizPage(){
       const data = await res.json();
 
       if(Array.isArray(data)){
-        const valid = data.filter((i:Item)=>i.jp);
-        setItems(valid);
-        setFiltered(valid);
+        setItems(data);
+        setFiltered(data);
       }
 
     };
@@ -48,31 +51,71 @@ export default function QuizPage(){
   },[]);
 
   // -----------------------
-  // Bookフィルター
+  // Bookフィルター（🔥フォールバック付き）
   // -----------------------
   useEffect(()=>{
 
+    let list;
+
     if(selectedBook === "All"){
+      list = items;
+    }else{
+      list = items.filter(i=>i.book === selectedBook);
+    }
+
+    // 🔥 少なすぎたらAllに戻す
+    if(list.length < 2){
       setFiltered(items);
     }else{
-      setFiltered(items.filter(i=>i.book === selectedBook));
+      setFiltered(list);
     }
 
   },[selectedBook,items]);
 
   // -----------------------
-  // 問題作成
+  // 翻訳取得
   // -----------------------
-  const generateQuiz = () => {
+  const getJP = async (item:Item) => {
 
-    if(filtered.length < 4) return;
+    if(item.jp) return item.jp;
+
+    if(translations[item.content]){
+      return translations[item.content];
+    }
+
+    const res = await fetch(
+      `https://api.mymemory.translated.net/get?q=${item.content}&langpair=en|ja`
+    );
+
+    const data = await res.json();
+    const text = data.responseData.translatedText;
+
+    setTranslations(prev=>({
+      ...prev,
+      [item.content]: text
+    }));
+
+    return text;
+  };
+
+  // -----------------------
+  // 問題作成（🔥可変選択肢）
+  // -----------------------
+  const generateQuiz = async () => {
+
+    if(filtered.length < 2) return;
 
     const shuffled = [...filtered].sort(()=>0.5 - Math.random());
 
     const correct = shuffled[0];
-    const wrongs = shuffled.slice(1,4);
 
-    const options = [correct.jp!, ...wrongs.map(w=>w.jp!)]
+    const wrongCount = Math.min(3, filtered.length - 1);
+    const wrongs = shuffled.slice(1, 1 + wrongCount);
+
+    const correctJP = await getJP(correct);
+    const wrongJP = await Promise.all(wrongs.map(getJP));
+
+    const options = [correctJP, ...wrongJP]
       .sort(()=>0.5 - Math.random());
 
     setCurrent(correct);
@@ -99,15 +142,21 @@ export default function QuizPage(){
     setSelected(choice);
     setTotal(prev=>prev+1);
 
-    if(choice === current.jp){
+    const correctJP = current.jp || translations[current.content];
+
+    if(choice === correctJP){
 
       setResult("correct");
       setScore(prev=>prev+1);
       setStreak(prev=>prev+1);
 
-      // 🔥 アニメーション
       setAnimate(true);
-      setTimeout(()=>setAnimate(false),400);
+      setTimeout(()=>setAnimate(false),300);
+
+      // 🔥 自動で次へ
+      setTimeout(()=>{
+        generateQuiz();
+      },800);
 
     }else{
 
@@ -118,10 +167,24 @@ export default function QuizPage(){
 
   };
 
-  if(filtered.length < 4){
+  // -----------------------
+  // リセット
+  // -----------------------
+  const resetQuiz = () => {
+    setScore(0);
+    setTotal(0);
+    setStreak(0);
+    generateQuiz();
+  };
+
+  // -----------------------
+  // UI
+  // -----------------------
+
+  if(filtered.length < 2){
     return (
       <div className="p-10 text-center">
-        <p>Not enough words 😢</p>
+        <p>単語が足りません（2つ以上必要）😢</p>
       </div>
     );
   }
@@ -130,16 +193,40 @@ export default function QuizPage(){
     return <div className="p-10">Loading...</div>;
   }
 
+  // 🔥 結果画面
+  if(total >= MAX_QUESTIONS){
+    return (
+      <main className="max-w-md mx-auto p-6 text-center space-y-6 pb-20">
+
+        <h1 className="text-2xl font-bold">🎉 Result</h1>
+
+        <div className="text-3xl font-bold">
+          {score} / {MAX_QUESTIONS}
+        </div>
+
+        <div className="text-gray-600">
+          正答率: {Math.round((score / MAX_QUESTIONS)*100)}%
+        </div>
+
+        <button
+          onClick={resetQuiz}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          もう一度
+        </button>
+
+      </main>
+    );
+  }
+
   return (
 
     <main className="max-w-md mx-auto p-6 text-center space-y-6 pb-20">
 
-      <h1 className="text-2xl font-bold">
-        🧠 Quiz
-      </h1>
+      <h1 className="text-2xl font-bold">🧠 Quiz</h1>
 
-      {/* 🔥 Book選択 */}
-      <div className="flex justify-center gap-2">
+      {/* Book選択 */}
+      <div className="flex justify-center gap-2 flex-wrap">
 
         {["All","Book1","Book2","Unsorted"].map((b)=>(
           <button
@@ -159,17 +246,17 @@ export default function QuizPage(){
 
       </div>
 
-      {/* 🔥 スコア */}
+      {/* スコア */}
       <div className="text-gray-600">
         Score: {score} / {total}
       </div>
 
-      {/* 🔥 streak */}
+      {/* streak */}
       <div className="text-orange-500 font-semibold">
         🔥 Streak: {streak}
       </div>
 
-      {/* 🔥 問題（アニメ付き） */}
+      {/* 問題 */}
       <div
         className="text-3xl font-semibold transition-transform duration-300"
         style={{
@@ -179,6 +266,7 @@ export default function QuizPage(){
         {current.content}
       </div>
 
+      {/* 選択肢 */}
       <div className="space-y-3">
 
         {choices.map((c,i)=>{
@@ -187,7 +275,9 @@ export default function QuizPage(){
 
           if(result){
 
-            if(c === current.jp){
+            const correctJP = current.jp || translations[current.content];
+
+            if(c === correctJP){
               bg = "bg-green-300";
             }else if(c === selected){
               bg = "bg-red-300";
@@ -209,7 +299,7 @@ export default function QuizPage(){
 
       </div>
 
-      {/* 🔥 結果 */}
+      {/* 結果表示 */}
       {result && (
         <div className="text-xl font-bold">
 
@@ -221,7 +311,7 @@ export default function QuizPage(){
             <div className="text-red-600">
               ❌ Wrong
               <div className="mt-2 text-black">
-                正解: {current.jp}
+                正解: {current.jp || translations[current.content]}
               </div>
             </div>
           )}
@@ -229,7 +319,8 @@ export default function QuizPage(){
         </div>
       )}
 
-      {result && (
+      {/* Next（間違えたとき） */}
+      {result === "wrong" && (
         <button
           onClick={generateQuiz}
           className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
