@@ -2,14 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
 
 export default function Home() {
 
   const [word,setWord] = useState("");
   const [history,setHistory] = useState<any[]>([]);
   const router = useRouter();
-  const params = useSearchParams();
 
   const search = async () => {
 
@@ -38,12 +36,6 @@ export default function Home() {
 
   useEffect(()=>{
 
-    const w = params.get("word");
-
-    if(w){
-      setWord(w);
-      router.push(`/search/${w}`);
-    }
 
     const loadHistory = async ()=>{
 

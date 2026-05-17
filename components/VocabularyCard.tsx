@@ -72,18 +72,20 @@ export default function VocabularyCard({
 
           {item.meanings?.map((m:any,i:number)=>{
 
-            const posJP = {
-              noun:"名詞",
-              verb:"動詞",
-              adjective:"形容詞",
-              adverb:"副詞"
-            }[m.partOfSpeech] || m.partOfSpeech;
+            const posJP: {[key:string]:string} = {
+  noun:"名詞",
+  verb:"動詞",
+  adjective:"形容詞",
+  adverb:"副詞"
+}[m.partOfSpeech as string] || m.partOfSpeech;
 
             return(
 
               <div key={i} className="mt-3">
 
-                <p className="font-semibold">{posJP}</p>
+                <p className="font-semibold">
+  {posJP[m.partOfSpeech as string] || m.partOfSpeech}
+</p>
 
                 <ul className="list-disc ml-5">
 
