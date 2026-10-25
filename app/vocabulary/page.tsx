@@ -130,7 +130,7 @@ export default function VocabularyPage(){
 
 
   const goDetail = (word:string)=>{
-  router.push(`/search/${word}`);
+  router.push(`/search/${encodeURIComponent(word)}`);
 };
 
 

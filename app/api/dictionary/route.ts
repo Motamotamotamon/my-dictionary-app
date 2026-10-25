@@ -1,3 +1,4 @@
+import { normalizeExpression, phraseEntry } from "@/lib/phrases";
 import { NextResponse } from "next/server";
 
 const parts: Record<string, string> = {
@@ -6,10 +7,12 @@ const parts: Record<string, string> = {
 };
 
 export async function GET(req: Request) {
-  const word = new URL(req.url).searchParams.get("word")?.trim();
+  const word = normalizeExpression(new URL(req.url).searchParams.get("word") || "");
   if (!word || word.length > 100) {
     return NextResponse.json({ error: "A word of 1–100 characters is required" }, { status: 400 });
   }
+  const phrase = phraseEntry(word);
+  if (phrase) return NextResponse.json([phrase]);
   try {
     const query = new URLSearchParams({ sp: word, qe: "sp", md: "dr", ipa: "1", max: "10" });
     const res = await fetch(`https://api.datamuse.com/words?${query}`, {

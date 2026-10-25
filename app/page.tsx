@@ -11,14 +11,15 @@ export default function Home() {
 
   const search = async () => {
 
-    if(!word.trim()) return;
+    const query = word.trim().replace(/\s+/g, " ");
+    if(!query) return;
 
     try{
       await fetch("/api/history",{
         method:"POST",
         headers:{ "Content-Type":"application/json" },
         body:JSON.stringify({
-          query:word,
+          query,
           mode:"word"
         })
       });
@@ -31,7 +32,7 @@ export default function Home() {
       console.error(err);
     }
 
-    router.push(`/search/${word}`);
+    router.push(`/search/${encodeURIComponent(query)}`);
   };
 
   useEffect(()=>{
@@ -77,7 +78,7 @@ export default function Home() {
       <input
         value={word}
         onChange={(e)=>setWord(e.target.value)}
-        placeholder="Search word..."
+        placeholder="単語・熟語を検索（例：go out with）"
         className="border p-3 rounded w-full"
         onKeyDown={(e)=>{
           if(e.key === "Enter"){
@@ -110,7 +111,7 @@ export default function Home() {
           {history.map((h,i)=>(
             <button
               key={i}
-              onClick={()=>router.push(`/search/${h.query}`)}
+              onClick={()=>router.push(`/search/${encodeURIComponent(h.query)}`)}
               className={`
                 px-3 py-1 rounded-full text-sm border transition
 
