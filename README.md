@@ -24,3 +24,8 @@ First, install dependencies:
 
 ```bash
 npm install
+
+
+## Dictionary data
+
+Definitions and pronunciation metadata are provided by the [Datamuse API](https://www.datamuse.com/api/), using Wiktionary and WordNet data. Pronunciation audio is not supplied by this endpoint. Exact word matches are required; spelling suggestions are not displayed as definitions. Datamuse has announced an API-key requirement for 2027; review their usage terms before then.
