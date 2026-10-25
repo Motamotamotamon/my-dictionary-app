@@ -14,6 +14,9 @@ type Item = {
 
 export default function VocabularyPage(){
 
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [reload, setReload] = useState(0);
   const [items,setItems] = useState<Item[]>([]);
   const [open,setOpen] = useState<{[key:string]:boolean}>({});
   const [translations,setTranslations] = useState<{[key:string]: string}>({});
@@ -22,25 +25,23 @@ export default function VocabularyPage(){
 
   useEffect(()=>{
 
+  let active = true;
   const load = async ()=>{
+    setLoading(true);
+    setLoadError("");
 
     try{
 
-      const res = await fetch("/api/saved");
+      const res = await fetch("/api/saved", { cache: "no-store", signal: AbortSignal.timeout(15000) });
+      if (!res.ok) throw new Error("Load failed");
       const data = await res.json();
 
-      console.log("saved data", data); // 🔍 デバッグ
-
-      // 🔥 ここが重要
-      if(Array.isArray(data)){
-        setItems(data);
-      }else{
-        setItems([]); // エラー回避
-      }
-
-    }catch(err){
-      console.error(err);
-      setItems([]);
+      if (!Array.isArray(data)) throw new Error("Invalid saved list");
+      if (active) setItems(data);
+    } catch {
+      if (active) setLoadError("単語帳を読み込めませんでした。再読み込みしてください。");
+    } finally {
+      if (active) setLoading(false);
     }
 
   };
@@ -51,10 +52,11 @@ export default function VocabularyPage(){
   window.addEventListener("focus", handleFocus);
 
   return () => {
+    active = false;
     window.removeEventListener("focus", handleFocus);
   };
 
-},[]);
+},[reload]);
 
 
 
@@ -200,7 +202,7 @@ if (activeTab === "Unsorted") currentItems = others;
         : "bg-white"
     }`}
   >
-    📘 Book1 ({book1.length})
+    📘 Book1 ({loading || loadError ? "—" : book1.length})
   </button>
 
   <button
@@ -214,7 +216,7 @@ if (activeTab === "Unsorted") currentItems = others;
         : "bg-white"
     }`}
   >
-    📗 Book2 ({book2.length})
+    📗 Book2 ({loading || loadError ? "—" : book2.length})
   </button>
 
   <button
@@ -228,13 +230,18 @@ if (activeTab === "Unsorted") currentItems = others;
         : "bg-white"
     }`}
   >
-    📂 Others ({others.length})
+    📂 Others ({loading || loadError ? "—" : others.length})
   </button>
 
 </div>
 
 {/* 🔥 表示部分 */}
-{currentItems.length === 0 && (
+{loading && <p role="status">読み込み中…</p>}
+{loadError && <div role="alert" className="text-red-600 text-center">
+  <p>{loadError}</p>
+  <button className="border rounded px-3 py-2 mt-2" onClick={() => setReload(value => value + 1)}>再読み込み</button>
+</div>}
+{!loading && !loadError && currentItems.length === 0 && (
   <p className="text-gray-400 text-center mt-10">
   No words yet 📭
 </p>
