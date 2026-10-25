@@ -11,10 +11,11 @@ export async function GET(req: Request) {
   try {
     const res = await fetch(
       `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`,
-      { signal: AbortSignal.timeout(10000) }
+      { signal: AbortSignal.timeout(10000), cache: "no-store", headers: { Accept: "application/json", "User-Agent": "MyDictionaryApp/1.0" } }
     );
 
     if (!res.ok) {
+      console.error("Dictionary upstream failure", { status: res.status, contentType: res.headers.get("content-type") });
       return NextResponse.json(
         { error: res.status === 404 ? "Word not found" : "Dictionary service unavailable" },
         { status: res.status === 404 ? 404 : 502 }
