@@ -9,7 +9,14 @@ export default function WordDetail() {
 
   const params = useParams();
   const word = params.word as string;
+  return <WordContent key={word} word={word} />;
+}
 
+function WordContent({ word }: { word: string }) {
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
   const [data, setData] = useState<any>(null);
   const [jpWord, setJpWord] = useState("");
   const [jpDefinitions, setJpDefinitions] = useState<any>({});
@@ -35,147 +42,128 @@ export default function WordDetail() {
     sound.play();
   };
 
-  // -----------------------
-  // 定義翻訳
-  // -----------------------
+  useEffect(() => {
+    const controller = new AbortController();
+    const active = () => !controller.signal.aborted;
 
-  const translateDefinition = async (text:string) => {
+    setLoading(true);
+    setError("");
+    setData(null);
+    setJpWord("");
+    setJpDefinitions({});
+    setJpExplain({});
+    setSynonyms([]);
+    setAntonyms([]);
+    setRelated([]);
+    setExamples([]);
+    setExplain(null);
 
-    if(jpDefinitions[text]) return;
-
-    const res = await fetch(
-      `https://api.mymemory.translated.net/get?q=${text}&langpair=en|ja`
-    );
-
-    const data = await res.json();
-
-    setJpDefinitions((prev:any)=>({
-      ...prev,
-      [text]: data.responseData.translatedText
-    }));
-
-    setJpExplain((prev:any)=>({
-      ...prev,
-      [text]: data.responseData.translatedText
-    }));
-
-  };
-
-  // -----------------------
-  // 単語翻訳
-  // -----------------------
-
-  const translateWord = async (word:string) => {
-
-    try {
-      const res = await fetch(
-        `https://api.mymemory.translated.net/get?q=${word}&langpair=en|ja`
-      );
-
-      const data = await res.json();
-      setJpWord(data.responseData.translatedText);
-
-    } catch(err) {
-      console.error(err);
-    }
-
-  };
-
-  // -----------------------
-  // 辞書取得
-  // -----------------------
-
-  useEffect(()=>{
-
-    const fetchWord = async ()=>{
-
-      try{
-
-        const [synRes,antRes,dictRes,relRes] = await Promise.all([
-          fetch(`https://api.datamuse.com/words?rel_syn=${word}`),
-          fetch(`https://api.datamuse.com/words?rel_ant=${word}`),
-          fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`),
-          fetch(`https://api.datamuse.com/words?ml=${word}`)
-        ]);
-
-        const synData = await synRes.json();
-        const antData = await antRes.json();
-        const json = await dictRes.json();
-        const relData = await relRes.json();
-
-        setSynonyms(synData.slice(0,6));
-        setAntonyms(antData.slice(0,6));
-        setRelated(relData.slice(0,8));
-
-        if(Array.isArray(json)){
-          setData(json);
-        }else{
-          setData([]);
-        }
-
-        translateWord(word);
-
-        if(Array.isArray(json)){
-          json[0]?.meanings?.forEach((m:any)=>{
-            m.definitions.forEach((d:any)=>{
-              if(d.definition){
-                translateDefinition(d.definition);
-              }
-            });
-          });
-        }
-
-        // AI examples
-        if(examples.length === 0){
-          try{
-            const ex = await fetch("/api/example",{
-              method:"POST",
-              headers:{ "Content-Type":"application/json" },
-              body:JSON.stringify({word})
-            });
-
-            const exData = await ex.json();
-
-            if(Array.isArray(exData)){
-              setExamples(exData);
-            }
-
-          }catch(err){
-            console.error("AI example error",err);
-          }
-        }
-
-        // AI explanation
-        try{
-          const res = await fetch("/api/explain",{
-            method:"POST",
-            headers:{ "Content-Type":"application/json" },
-            body:JSON.stringify({word})
-          });
-
-          const data = await res.json();
-          setExplain(data);
-
-          if(data?.meaning){
-            translateDefinition(data.meaning);
-          }
-          if(data?.nuance){
-            translateDefinition(data.nuance);
-          }
-
-        }catch(err){
-          console.error("AI explain error",err);
-        }
-
-      }catch(err){
-        console.error("fetch word error",err);
+    // Every request has its own deadline; cleanup also cancels all pending work.
+    const request = async (url: string, init: RequestInit = {}) => {
+      const timeout = AbortSignal.timeout(15000);
+      const response = await fetch(url, {
+        ...init,
+        signal: AbortSignal.any([controller.signal, timeout]),
+      });
+      if (!response.ok) {
+        throw new Error(response.status === 404 ? "not-found" : "request-failed");
       }
-
+      return response.json();
     };
 
-    if(word) fetchWord();
+    const translate = async (text: string, isWord = false) => {
+      try {
+        const json = await request(
+          `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|ja`
+        );
+        const translated = json?.responseData?.translatedText;
+        if (!active() || json?.responseStatus !== 200 || typeof translated !== "string") return;
+        if (isWord) {
+          setJpWord(translated);
+        } else {
+          setJpDefinitions((prev: any) => ({ ...prev, [text]: translated }));
+          setJpExplain((prev: any) => ({ ...prev, [text]: translated }));
+        }
+      } catch {
+        // A translation failure must not hide the dictionary entry.
+      }
+    };
 
-  },[word]);
+    const loadDictionary = async () => {
+      try {
+        const json = await request(`/api/dictionary?word=${encodeURIComponent(word)}`);
+        if (!Array.isArray(json) || !json.length || !Array.isArray(json[0]?.meanings)) {
+          throw new Error("invalid-response");
+        }
+        if (!active()) return;
+        setData(json);
+        void translate(word, true);
+        json[0].meanings.forEach((meaning: any) => {
+          meaning.definitions?.forEach((definition: any) => {
+            if (definition.definition) void translate(definition.definition);
+          });
+        });
+      } catch (err) {
+        if (!active()) return;
+        if (err instanceof Error && err.message === "not-found") {
+          setData([]);
+        } else {
+          setError("辞書データを取得できませんでした。時間をおいて再試行してください。");
+        }
+      } finally {
+        if (active()) setLoading(false);
+      }
+    };
+
+    const loadRelated = async (
+      relation: string,
+      limit: number,
+      update: (items: any[]) => void
+    ) => {
+      try {
+        const json = await request(
+          `https://api.datamuse.com/words?${relation}=${encodeURIComponent(word)}`
+        );
+        if (active() && Array.isArray(json)) update(json.slice(0, limit));
+      } catch {
+        // Related words are optional.
+      }
+    };
+
+    const loadAI = async (kind: "example" | "explain") => {
+      try {
+        const json = await request(`/api/${kind}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ word }),
+        });
+        if (!active()) return;
+        if (kind === "example" && Array.isArray(json)) setExamples(json);
+        if (kind === "explain" && typeof json?.meaning === "string") {
+          setExplain(json);
+          void translate(json.meaning);
+          if (json.nuance) void translate(json.nuance);
+        }
+      } catch {
+        // AI results are optional and never block dictionary rendering.
+      }
+    };
+
+    if (!word) {
+      setError("検索する単語を入力してください。");
+      setLoading(false);
+      return () => controller.abort();
+    }
+
+    void loadDictionary();
+    void loadRelated("rel_syn", 6, setSynonyms);
+    void loadRelated("rel_ant", 6, setAntonyms);
+    void loadRelated("ml", 8, setRelated);
+    void loadAI("example");
+    void loadAI("explain");
+
+    return () => controller.abort();
+  }, [word, attempt]);
 
   // -----------------------
   // meanings整形
@@ -195,9 +183,24 @@ export default function WordDetail() {
 
   };
 
-  if(!data) return <div className="p-10">Loading...</div>;
+  if (loading) return <div className="p-10" role="status">Loading...</div>;
 
-  if(data.length === 0){
+  if (error) {
+    return (
+      <main className="p-10 text-center space-y-4">
+        <p role="alert">{error}</p>
+        <button
+          onClick={() => setAttempt((value) => value + 1)}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          再試行
+        </button>
+        <div><Link href="/">検索画面に戻る</Link></div>
+      </main>
+    );
+  }
+
+  if(!data || data.length === 0){
     return (
       <div className="p-10 text-center">
         <p className="text-xl">Word not found</p>
