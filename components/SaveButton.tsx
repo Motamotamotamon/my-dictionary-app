@@ -16,6 +16,8 @@ export default function SaveButton({
   meanings
 }: Props){
 
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
   const [isSaved,setIsSaved] = useState(false);
   const [showBooks,setShowBooks] = useState(false);
   const [animate,setAnimate] = useState<"idle" | "big" | "small">("idle");
@@ -25,14 +27,18 @@ export default function SaveButton({
   // -----------------------
   useEffect(()=>{
 
+    let active = true;
+    setIsSaved(false);
     const checkSaved = async ()=>{
 
       try{
-        const res = await fetch("/api/saved");
+        const res = await fetch("/api/saved", { cache: "no-store", signal: AbortSignal.timeout(15000) });
+        if (!res.ok) throw new Error("保存状態を確認できませんでした。");
         const data = await res.json();
 
+        if (!Array.isArray(data)) throw new Error("保存状態を確認できませんでした。");
         const found = data.some((i:any)=>i.content === word);
-        setIsSaved(found);
+        if (active) setIsSaved(found);
 
       }catch(err){
         console.error("save check error",err);
@@ -41,6 +47,7 @@ export default function SaveButton({
     };
 
     if(word) checkSaved();
+    return () => { active = false; };
 
   },[word]);
 
@@ -48,10 +55,13 @@ export default function SaveButton({
   // 保存
   // -----------------------
   const saveWord = async (book:string)=>{
-
+    if (busy) return;
+    setBusy(true);
+    setError("");
     try{
 
-      await fetch("/api/saved",{
+      const res = await fetch("/api/saved",{
+        signal: AbortSignal.timeout(15000),
         method:"POST",
         headers:{
           "Content-Type":"application/json"
@@ -65,6 +75,9 @@ export default function SaveButton({
         })
       });
 
+      if (!res.ok) throw new Error("保存できませんでした。もう一度お試しください。");
+      const saved = await res.json();
+      if (!saved?.id || saved.content !== word || saved.book !== book) throw new Error("保存結果を確認できませんでした。");
       setIsSaved(true);
       setShowBooks(false);
 
@@ -74,7 +87,9 @@ export default function SaveButton({
       setTimeout(()=>setAnimate("idle"),800);
 
     }catch(err){
-      console.error("save error",err);
+      setError("保存できませんでした。もう一度お試しください。");
+    } finally {
+      setBusy(false);
     }
 
   };
@@ -84,11 +99,20 @@ export default function SaveButton({
   // -----------------------
   const removeWord = async () => {
 
-    await fetch(`/api/saved?content=${word}`,{
-      method:"DELETE"
-    });
-
-    setIsSaved(false);
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      const res = await fetch(`/api/saved?content=${encodeURIComponent(word)}`, {
+        method: "DELETE", signal: AbortSignal.timeout(15000),
+      });
+      if (!res.ok) throw new Error("Delete failed");
+      setIsSaved(false);
+    } catch {
+      setError("保存の解除に失敗しました。もう一度お試しください。");
+    } finally {
+      setBusy(false);
+    }
 
   };
 
@@ -110,6 +134,7 @@ export default function SaveButton({
     <div className="space-y-2">
 
       <button
+        disabled={busy}
         onClick={handleClick}
         style={{
           transform:
@@ -128,14 +153,17 @@ export default function SaveButton({
           }
         `}
       >
-        {isSaved ? "★ Saved" : "☆ Save"}
+        {busy ? "処理中…" : isSaved ? "★ Saved" : "☆ Save"}
       </button>
+
+      {error && <p role="alert" className="text-red-600">{error}</p>}
 
       {showBooks && !isSaved && (
 
         <div className="flex gap-2">
 
           <button
+        disabled={busy}
             onClick={()=>saveWord("Book1")}
             className="px-3 py-1 border rounded"
           >
@@ -143,6 +171,7 @@ export default function SaveButton({
           </button>
 
           <button
+        disabled={busy}
             onClick={()=>saveWord("Book2")}
             className="px-3 py-1 border rounded"
           >
@@ -150,6 +179,7 @@ export default function SaveButton({
           </button>
 
           <button
+        disabled={busy}
             onClick={()=>saveWord("Unsorted")}
             className="px-3 py-1 border rounded"
           >
