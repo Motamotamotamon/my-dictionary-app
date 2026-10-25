@@ -14,6 +14,7 @@ export default function WordDetail() {
 
 function WordContent({ word }: { word: string }) {
 
+  const [manualMeaning, setManualMeaning] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
@@ -97,10 +98,13 @@ function WordContent({ word }: { word: string }) {
         }
         if (!active()) return;
         setData(json);
-        void translate(word, true);
+        if (json[0].jp) setJpWord(json[0].jp);
+        else void translate(word, true);
         json[0].meanings.forEach((meaning: any) => {
           meaning.definitions?.forEach((definition: any) => {
-            if (definition.definition) void translate(definition.definition);
+            if (definition.jp) {
+              setJpDefinitions((prev: any) => ({ ...prev, [definition.definition]: definition.jp }));
+            } else if (definition.definition) void translate(definition.definition);
           });
         });
       } catch (err) {
@@ -203,7 +207,12 @@ function WordContent({ word }: { word: string }) {
   if(!data || data.length === 0){
     return (
       <div className="p-10 text-center">
-        <p className="text-xl">Word not found</p>
+        <p className="text-xl">辞書に見つかりませんでした</p>
+        <p className="mt-3">「{word}」の日本語の意味を入力して、単語帳に保存できます。</p>
+        <label className="block mt-4" htmlFor="manual-meaning">日本語の意味</label>
+        <input id="manual-meaning" className="border rounded p-3 w-full mt-2" value={manualMeaning}
+          onChange={(event) => setManualMeaning(event.target.value)} maxLength={500} placeholder="例：〜と付き合う" />
+        {manualMeaning.trim() && <div className="mt-4"><SaveButton word={word} jpWord={manualMeaning.trim()} meanings={[]} /></div>}
       </div>
     );
   }
@@ -248,6 +257,7 @@ function WordContent({ word }: { word: string }) {
         meanings={buildMeanings()}
       />
 
+      {data[0]?.source && <p className="text-sm text-gray-500">出典：{data[0].source}</p>}
       {/* meanings */}
 
       {data[0]?.meanings?.map((m:any,i:number)=>(
@@ -263,6 +273,8 @@ function WordContent({ word }: { word: string }) {
             <div key={j} className="mb-4">
 
               <p>• {d.definition}</p>
+              {d.example && <p className="italic mt-2">{d.example}</p>}
+              {d.exampleJP && <p className="text-blue-600">{d.exampleJP}</p>}
 
               {jpDefinitions[d.definition] && (
                 <p className="text-blue-600 ml-4">
