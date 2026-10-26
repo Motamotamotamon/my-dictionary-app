@@ -62,14 +62,15 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const content = new URL(req.url).searchParams.get("content");
     const items = await prisma.savedItem.findMany({
-      where: { type: "word" },
+      where: { type: "word", ...(content !== null ? { content } : {}) },
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(items);
+    return NextResponse.json(items, { headers: { "Cache-Control": "private, no-store" } });
   } catch (error) {
     console.error("GET SAVE ERROR:", error);
     return NextResponse.json(

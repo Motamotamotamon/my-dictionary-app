@@ -9,30 +9,16 @@ export default function Home() {
   const [history,setHistory] = useState<any[]>([]);
   const router = useRouter();
 
-  const search = async () => {
-
+  const search = () => {
     const query = word.trim().replace(/\s+/g, " ");
-    if(!query) return;
-
-    try{
-      await fetch("/api/history",{
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({
-          query,
-          mode:"word"
-        })
-      });
-
-      const res = await fetch("/api/history");
-      const data = await res.json();
-      setHistory(data.slice(0,5));
-
-    }catch(err){
-      console.error(err);
-    }
-
+    if (!query) return;
     router.push(`/search/${encodeURIComponent(query)}`);
+    // History is optional and must never delay navigation.
+    void fetch("/api/history", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, mode: "word" }), keepalive: true,
+      signal: AbortSignal.timeout(10000),
+    }).catch(err => console.error("history save error", err));
   };
 
   useEffect(()=>{
@@ -44,7 +30,7 @@ export default function Home() {
         const res = await fetch("/api/history");
         const data = await res.json();
 
-        console.log("history",data);
+
 
         if(Array.isArray(data)){
           setHistory(data.slice(0,5));

@@ -30,7 +30,7 @@ export default function SaveButton({ word, jpWord, phonetic, meanings }: Props) 
     setError("");
     (async () => {
       try {
-        const res = await fetch("/api/saved", { cache: "no-store", signal: AbortSignal.timeout(15000) });
+        const res = await fetch(`/api/saved?content=${encodeURIComponent(word)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) });
         if (!res.ok) throw new Error();
         const items = await res.json();
         if (!Array.isArray(items)) throw new Error();

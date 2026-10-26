@@ -1,6 +1,8 @@
 import { normalizeExpression, phraseEntry } from "@/lib/phrases";
 import { NextResponse } from "next/server";
 
+const publicHeaders = { "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=3600" };
+
 const parts: Record<string, string> = {
   n: "noun", v: "verb", adj: "adjective", adv: "adverb",
   prep: "preposition", pron: "pronoun", interj: "interjection", conj: "conjunction",
@@ -12,7 +14,7 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: "A word of 1–100 characters is required" }, { status: 400 });
   }
   const phrase = phraseEntry(word);
-  if (phrase) return NextResponse.json([phrase]);
+  if (phrase) return NextResponse.json([phrase], { headers: publicHeaders });
   try {
     const query = new URLSearchParams({ sp: word, qe: "sp", md: "dr", ipa: "1", max: "10" });
     const res = await fetch(`https://api.datamuse.com/words?${query}`, {
@@ -48,7 +50,7 @@ export async function GET(req: Request) {
       meanings: Array.from(groups, ([partOfSpeech, definitions]) => ({ partOfSpeech, definitions })),
       sourceUrls: ["https://www.datamuse.com/api/"],
       source: "Datamuse (Wiktionary / WordNet)",
-    }]);
+    }], { headers: publicHeaders });
   } catch (error) {
     console.error("Dictionary request failed", error instanceof Error ? error.name : "unknown");
     return NextResponse.json({ error: "Failed to fetch dictionary" }, {

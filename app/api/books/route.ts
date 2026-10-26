@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { listBooks } from "@/lib/book-store";
 import { validBookName } from "@/lib/books";
 export async function GET() {
-  try { return NextResponse.json(await listBooks()); }
+  try { return NextResponse.json(await listBooks(), { headers: { "Cache-Control": "private, no-store" } }); }
   catch { return NextResponse.json({ error: "Bookを読み込めませんでした。" }, { status: 500 }); }
 }
 async function write(req: Request, rename: boolean) {
