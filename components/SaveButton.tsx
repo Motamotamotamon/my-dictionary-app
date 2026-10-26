@@ -1,10 +1,12 @@
 "use client";
 
+import { useBooks } from "@/components/useBooks";
 import { useEffect, useState } from "react";
 
 type Props = { word: string; jpWord: string; phonetic?: string; meanings: any[] };
 
 export default function SaveButton({ word, jpWord, phonetic, meanings }: Props) {
+  const { books, bookError, booksLoading } = useBooks();
   const [busy, setBusy] = useState(false);
   const [checking, setChecking] = useState(true);
   const [error, setError] = useState("");
@@ -106,11 +108,12 @@ export default function SaveButton({ word, jpWord, phonetic, meanings }: Props) 
           placeholder={selectedDefinition?.jp || "自分が覚えたい意味を入力"} className="block border rounded p-2 w-full" />
         <span className="text-sm text-gray-600">未入力の場合は選んだ意味を保存します。</span>
       </label>}
-      <label className="block">保存先 <select value={book} disabled={busy} onChange={event => setBook(event.target.value)} className="border rounded p-2">
-        <option>Book1</option><option>Book2</option><option>Unsorted</option>
+      <label className="block">保存先 <select value={book} disabled={busy || booksLoading || !!bookError} onChange={event => setBook(event.target.value)} className="border rounded p-2">
+        {books.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
       </select></label>
+      {bookError && <p role="alert" className="text-red-600">{bookError}</p>}
       <p className="text-sm text-gray-600">ほかの意味と例文も一緒に保存され、単語帳から開けます。</p>
-      <button disabled={busy} onClick={save} className="bg-blue-500 text-white rounded px-4 py-2">{busy ? "処理中…" : "この内容で保存"}</button>
+      <button disabled={busy || booksLoading || !!bookError} onClick={save} className="bg-blue-500 text-white rounded px-4 py-2">{busy ? "処理中…" : "この内容で保存"}</button>
       {saved && <button disabled={busy} onClick={remove} className="ml-3 text-red-600">保存を解除</button>}
     </div>}
   </section>;

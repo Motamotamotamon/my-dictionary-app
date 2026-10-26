@@ -1,3 +1,4 @@
+import { bookExists } from "@/lib/book-store";
 import { NextResponse } from "next/server";
 import { notesOf, withNotes } from "@/lib/vocabulary";
 import { prisma } from "@/lib/prisma";
@@ -11,6 +12,8 @@ export async function POST(req: Request) {
       meanings,
       book
     } = await req.json();
+
+    if (!(await bookExists(book || "Unsorted"))) return NextResponse.json({ error: "Book not found" }, { status: 400 });
 
     // 🔥 既にあるかチェック
     const existing = await prisma.savedItem.findFirst({
@@ -114,7 +117,7 @@ export async function PATCH(req: Request) {
       return NextResponse.json(saved);
     }
     const { content, book } = body;
-    if (typeof content !== "string" || !content.trim() || !["Book1", "Book2", "Unsorted"].includes(book)) {
+    if (typeof content !== "string" || !content.trim() || !(await bookExists(book))) {
       return NextResponse.json({ error: "Invalid book move" }, { status: 400 });
     }
     await prisma.savedItem.updateMany({ where: { content, type: "word" }, data: { book } });

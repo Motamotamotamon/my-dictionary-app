@@ -1,5 +1,6 @@
 "use client";
 
+import { type Book } from "@/lib/books";
 import { useState } from "react";
 import { notesOf, type SavedWord } from "@/lib/vocabulary";
 import SpeechControls from "@/components/SpeechControls";
@@ -8,6 +9,7 @@ type Item = SavedWord;
 
 type Props = {
   item: Item;
+  books: Book[];
   onUpdate: (item: SavedWord)=>void;
   goDetail: (word:string)=>void;
   removeWord: (word:string)=>void;
@@ -17,6 +19,7 @@ type Props = {
 
 export default function VocabularyCard({
   item,
+  books,
   onUpdate,
   goDetail,
   removeWord,
@@ -105,19 +108,9 @@ export default function VocabularyCard({
           🗑 Remove
         </button>
 
-        <button
-          onClick={()=>updateBook(item.content,"Book1")}
-          className="bg-blue-100 px-2 py-1 rounded text-sm"
-        >
-          📘 Book1
-        </button>
-
-        <button
-          onClick={()=>updateBook(item.content,"Book2")}
-          className="bg-green-100 px-2 py-1 rounded text-sm"
-        >
-          📗 Book2
-        </button>
+        <label>移動先 <select aria-label={`${item.content}の移動先`} value={item.book || "Unsorted"} onChange={event => updateBook(item.content, event.target.value)} className="border rounded p-2">
+          {books.map(book => <option key={book.id} value={book.id}>{book.name}</option>)}
+        </select></label>
 
       </div>
 

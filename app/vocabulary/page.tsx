@@ -1,10 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useBooks } from "@/components/useBooks";
+import BookManager from "@/components/BookManager";
 import VocabularyCard from "@/components/VocabularyCard";
 import { matchesWord, type SavedWord } from "@/lib/vocabulary";
 
 export default function VocabularyPage() {
+  const { books, setBooks, bookError } = useBooks();
   const [items, setItems] = useState<SavedWord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -48,11 +51,13 @@ export default function VocabularyPage() {
   if (sort === "alphabet") visible.sort((a, b) => a.content.localeCompare(b.content, "en", { sensitivity: "base" }));
   return <main className="max-w-xl mx-auto p-6 pb-20">
     <h1 className="text-3xl font-bold mb-6">📚 Vocabulary</h1>
+    <BookManager books={books} onSave={updated => { setBooks(previous => previous.some(book => book.id === updated.id) ? previous.map(book => book.id === updated.id ? updated : book) : [...previous, updated]); setActiveTab(updated.id); }} />
+    {bookError && <p role="alert" className="text-red-600">{bookError}</p>}
     <label className="block">単語帳を検索
       <input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="英語・日本語・例文・メモ" className="border rounded p-3 w-full mt-2" />
     </label>
     <div className="flex flex-wrap gap-2 my-4">
-      {[["All", "すべて"], ["Book1", "📘 Book1"], ["Book2", "📗 Book2"], ["Unsorted", "📂 Others"]].map(([book, label]) =>
+      {[["All", "すべて"], ...books.map(book => [book.id, book.name])].map(([book, label]) =>
         <button key={book} onClick={() => setActiveTab(book)} aria-pressed={activeTab === book} className={`border rounded px-3 py-2 ${activeTab === book ? "bg-blue-500 text-white" : ""}`}>
           {label} ({loading || error ? "—" : items.filter(item => inBook(item, book)).length})
         </button>)}
@@ -64,7 +69,7 @@ export default function VocabularyPage() {
     {error && <div role="alert" className="text-red-600"><p>{error}</p><button onClick={() => setReload(value => value + 1)}>再読み込み</button></div>}
     {!loading && !error && <p className="text-sm text-gray-500 mb-3" role="status">{visible.length} / {bookItems.length}件</p>}
     {!loading && !error && !visible.length && <p className="text-center my-6">{query.trim() ? "一致する表現がありません。「すべて」タブでも検索できます。" : "まだ保存された表現がありません。"}</p>}
-    {visible.map(item => <VocabularyCard key={item.id} item={item} translations={{}}
+    {visible.map(item => <VocabularyCard key={item.id} item={item} books={books} translations={{}}
       goDetail={word => router.push(`/search/${encodeURIComponent(word)}`)}
       removeWord={word => { void mutate(word); }} updateBook={(word, book) => { void mutate(word, book); }}
       onUpdate={updated => setItems(previous => previous.map(item => item.id === updated.id ? updated : item))} />)}
