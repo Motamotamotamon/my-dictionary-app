@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { createTranslator } from "@/lib/translations";
 import SpeechControls from "@/components/SpeechControls";
 import SaveButton from "@/components/SaveButton";
 
@@ -73,21 +74,14 @@ function WordContent({ word }: { word: string }) {
       return response.json();
     };
 
+    const getTranslation = createTranslator(request, active);
     const translate = async (text: string, isWord = false) => {
-      try {
-        const json = await request(
-          `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|ja`
-        );
-        const translated = json?.responseData?.translatedText;
-        if (!active() || json?.responseStatus !== 200 || typeof translated !== "string") return;
-        if (isWord) {
-          setJpWord(translated);
-        } else {
-          setJpDefinitions((prev: any) => ({ ...prev, [text]: translated }));
-          setJpExplain((prev: any) => ({ ...prev, [text]: translated }));
-        }
-      } catch {
-        // A translation failure must not hide the dictionary entry.
+      const translated = await getTranslation(text);
+      if (!active() || translated === null) return;
+      if (isWord) setJpWord(translated);
+      else {
+        setJpDefinitions((prev: any) => ({ ...prev, [text]: translated }));
+        setJpExplain((prev: any) => ({ ...prev, [text]: translated }));
       }
     };
 
