@@ -1,5 +1,6 @@
 "use client";
 
+import { useBooks } from "@/components/useBooks";
 import { useEffect, useState } from "react";
 
 type Item = {
@@ -11,6 +12,7 @@ type Item = {
 
 export default function QuizPage(){
 
+  const { books } = useBooks();
   const [items,setItems] = useState<Item[]>([]);
   const [filtered,setFiltered] = useState<Item[]>([]);
   const [current,setCurrent] = useState<Item | null>(null);
@@ -228,7 +230,7 @@ export default function QuizPage(){
       {/* Book選択 */}
       <div className="flex justify-center gap-2 flex-wrap">
 
-        {["All","Book1","Book2","Unsorted"].map((b)=>(
+        {["All", ...books.map(book => book.id)].map((b)=>(
           <button
             key={b}
             onClick={()=>setSelectedBook(b)}
@@ -240,7 +242,7 @@ export default function QuizPage(){
               }
             `}
           >
-            {b}
+            {b === "All" ? "All" : books.find(book => book.id === b)?.name || b}
           </button>
         ))}
 
