@@ -56,7 +56,7 @@ export default function SpeechControls({ text, label = "英語" }: { text: strin
   if (supported === false) return <span className="text-sm text-gray-500">この環境は読み上げに対応していません。</span>;
   return <span className="inline-flex flex-wrap items-center gap-2 text-sm font-normal">
     <button type="button" disabled={!supported || !text.trim()} onClick={() => play(1)} aria-label={`${label}を読み上げる`} className="border rounded px-2 py-1">🔊 再生</button>
-    <button type="button" disabled={!supported || !text.trim()} onClick={() => play(0.75)} aria-label={`${label}をゆっくり読み上げる`} className="border rounded px-2 py-1">ゆっくり</button>
+    <button type="button" disabled={!supported || !text.trim()} onClick={() => play(0.5)} aria-label={`${label}をゆっくり読み上げる`} className="border rounded px-2 py-1">ゆっくり</button>
     {playing && <button type="button" onClick={() => stopRef.current?.()} aria-label={`${label}の読み上げを停止`} className="border rounded px-2 py-1">■ 停止</button>}
     {error && <span role="alert" className="text-red-600">{error}</span>}
   </span>;
