@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { notesOf, withNotes } from "@/lib/vocabulary";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
@@ -28,7 +29,7 @@ export async function POST(req: Request) {
         data: {
           jp,
           phonetic,
-          meanings,
+          meanings: withNotes(meanings, notesOf(existing as any).note, notesOf(existing as any).example, notesOf(existing as any).exampleJP),
           book: book || "Unsorted"
         }
       });
@@ -98,18 +99,25 @@ export async function DELETE(req: Request) {
 }
 export async function PATCH(req: Request) {
   try {
-    const { content, book } = await req.json();
-
-    await prisma.savedItem.updateMany({
-      where: {
-        content,
-        type: "word"
-      },
-      data: {
-        book: book || "Unsorted"
+    const body = await req.json();
+    if (body.id !== undefined) {
+      const { id, jp, note, example, exampleJP } = body;
+      if (!Number.isInteger(id) || id <= 0 || typeof jp !== "string" || jp.length > 1000 ||
+          [note, example, exampleJP].some(value => typeof value !== "string" || value.length > 3000)) {
+        return NextResponse.json({ error: "Invalid edit" }, { status: 400 });
       }
-    });
-
+      const existing = await prisma.savedItem.findFirst({ where: { id, type: "word" } });
+      if (!existing) return NextResponse.json({ error: "Word not found" }, { status: 404 });
+      const saved = await prisma.savedItem.update({ where: { id }, data: {
+        jp, meanings: withNotes(existing.meanings, note, example, exampleJP),
+      } });
+      return NextResponse.json(saved);
+    }
+    const { content, book } = body;
+    if (typeof content !== "string" || !content.trim() || !["Book1", "Book2", "Unsorted"].includes(book)) {
+      return NextResponse.json({ error: "Invalid book move" }, { status: 400 });
+    }
+    await prisma.savedItem.updateMany({ where: { content, type: "word" }, data: { book } });
     return NextResponse.json({ message: "updated" });
 
   } catch (error) {
