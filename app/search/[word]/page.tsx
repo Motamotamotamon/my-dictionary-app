@@ -181,7 +181,9 @@ function WordContent({ word }: { word: string }) {
       partOfSpeech: m.partOfSpeech,
       definitions: m.definitions.map((d:any)=>({
         definition: d.definition,
-        example: d.example || ""
+        example: d.example || "",
+        exampleJP: d.exampleJP || "",
+        jp: d.jp || jpDefinitions[d.definition] || ""
       }))
     }));
 
