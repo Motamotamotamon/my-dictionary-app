@@ -100,7 +100,7 @@ function WordContent({ word }: { word: string }) {
         if (!active()) return;
         setData(json);
         if (json[0].jp) setJpWord(json[0].jp);
-        else void translate(word, true);
+        else void translate(json[0].source?.startsWith("Princeton WordNet") ? json[0].meanings[0]?.definitions[0]?.definition || word : word, true);
         json[0].meanings.forEach((meaning: any) => {
           meaning.definitions?.forEach((definition: any) => {
             if (definition.jp) {
@@ -268,6 +268,8 @@ function WordContent({ word }: { word: string }) {
 
       {data[0]?.source && <p className="text-sm text-gray-500">出典：{data[0].source}</p>}
       {data[0]?.word?.toLowerCase() !== word.toLowerCase() && <p className="text-sm text-gray-600">基本形「{data[0]?.word}」の意味を表示しています。</p>}
+      {data[0]?.source?.startsWith("Princeton WordNet") && <p className="text-sm text-gray-500">和訳は自動翻訳です。辞書に例文がない語義は、例文を表示しません。</p>}
+      {data[0]?.sourceUrls?.length > 0 && <div className="text-sm flex flex-wrap gap-3">{data[0].sourceUrls.map((url: string) => <a key={url} href={url} target="_blank" rel="noreferrer" className="text-blue-600 underline">{url.endsWith("license.txt") ? "辞書ライセンス" : "出典を開く"}</a>)}</div>}
       {/* meanings */}
 
       {data[0]?.meanings?.map((m:any,i:number)=>(

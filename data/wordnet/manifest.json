@@ -1,0 +1,13 @@
+{
+  "source": "Princeton WordNet 3.0, derived multiword subset",
+  "archive_sha256": "cbda5ea6eef7f36a97a43d4a75f85e07fccbb4f23657d27b4ccbc93e2646ab59",
+  "expressions": 3988,
+  "senses": 5674,
+  "parts": [
+    "verb",
+    "adverb",
+    "adjective"
+  ],
+  "excluded": "noun compounds and names",
+  "license": "LICENSE.txt"
+}
