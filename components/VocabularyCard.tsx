@@ -1,21 +1,14 @@
 "use client";
 
+import { useState } from "react";
+import { notesOf, type SavedWord } from "@/lib/vocabulary";
 import SpeechControls from "@/components/SpeechControls";
 
-type Item = {
-  id:number
-  content:string
-  jp?:string
-  meanings?:any[]
-  phonetic?:string
-  book?:string
-};
+type Item = SavedWord;
 
 type Props = {
   item: Item;
-  open: {[key:string]:boolean};
-  toggle: (word:string)=>void;
-  speak: (word:string)=>void;
+  onUpdate: (item: SavedWord)=>void;
   goDetail: (word:string)=>void;
   removeWord: (word:string)=>void;
   updateBook: (word:string,book:string)=>void;
@@ -24,15 +17,30 @@ type Props = {
 
 export default function VocabularyCard({
   item,
-  open,
-  toggle,
-  speak,
+  onUpdate,
   goDetail,
   removeWord,
   updateBook,
   translations
 }: Props){
 
+  const [editing, setEditing] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [draft, setDraft] = useState({ jp: item.jp || "", ...notesOf(item) });
+  const notes = notesOf(item);
+  const save = async () => {
+    setBusy(true); setError("");
+    try {
+      const res = await fetch("/api/saved", { method: "PATCH", headers: { "Content-Type": "application/json" },
+        signal: AbortSignal.timeout(15000), body: JSON.stringify({ id: item.id, ...draft }) });
+      if (!res.ok) throw new Error();
+      const updated = await res.json();
+      if (updated.id !== item.id) throw new Error();
+      onUpdate(updated); setEditing(false);
+    } catch { setError("保存できませんでした。編集内容は残っています。再試行してください。"); }
+    finally { setBusy(false); }
+  };
   return(
 
     <div className="border rounded p-4 mb-3 bg-white shadow-sm">
@@ -76,7 +84,19 @@ export default function VocabularyCard({
         </details>
       </div>
 
-      <div className="flex gap-3 mt-4">
+      {notes.note && <p className="mt-3 whitespace-pre-wrap text-gray-700">📝 {notes.note}</p>}
+      {notes.example && <div className="mt-3"><p className="italic whitespace-pre-wrap">{notes.example}</p><p>{notes.exampleJP}</p><SpeechControls text={notes.example} label="自分の例文" /></div>}
+      {editing && <div className="mt-4 space-y-3 border rounded p-3">
+        {([ ["jp", "覚えたい意味"], ["note", "自分のメモ"], ["example", "自分の英語例文"], ["exampleJP", "例文の日本語訳"] ] as const).map(([key, label]) =>
+          <label key={key} className="block">{label}<textarea className="block border rounded p-2 w-full" value={draft[key]} disabled={busy}
+            maxLength={key === "jp" ? 1000 : 3000} onChange={event => setDraft(value => ({ ...value, [key]: event.target.value }))} /></label>)}
+        <p className="text-sm text-gray-500">辞書のほかの意味・例文はそのまま残ります。</p>
+        {error && <p role="alert" className="text-red-600">{error}</p>}
+        <button disabled={busy} onClick={save} className="bg-blue-500 text-white px-3 py-2 rounded">{busy ? "保存中…" : "変更を保存"}</button>
+        <button disabled={busy} onClick={() => setEditing(false)} className="ml-3">キャンセル</button>
+      </div>}
+      <div className="flex flex-wrap gap-3 mt-4">
+        <button onClick={() => { setDraft({ jp: item.jp || "", ...notesOf(item) }); setError(""); setEditing(true); }} className="border rounded px-3 py-1">✏️ 編集</button>
 
         <button
           onClick={()=>removeWord(item.content)}
