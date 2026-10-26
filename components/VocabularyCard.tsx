@@ -1,5 +1,7 @@
 "use client";
 
+import SpeechControls from "@/components/SpeechControls";
+
 type Item = {
   id:number
   content:string
@@ -46,7 +48,7 @@ export default function VocabularyCard({
 
         <div className="flex items-center gap-2">
 
-          <button onClick={() => speak(item.content)} aria-label={`${item.content}を読み上げる`} className="text-lg">🔊</button>
+          <SpeechControls text={item.content} label={item.content} />
 
         </div>
 
@@ -56,7 +58,7 @@ export default function VocabularyCard({
         <p className="text-xs text-gray-500">覚えたい意味</p>
         <p className="font-semibold text-blue-700">{item.jp || item.meanings?.flatMap((m: any) => m.definitions).find((d: any) => d.selected)?.definition || "意味未登録"}</p>
         {item.meanings?.flatMap((m: any) => m.definitions).filter((d: any) => d.selected).map((d: any, i: number) =>
-          <div key={i}><p>{d.definition}</p>{d.example && <p className="italic">{d.example}</p>}{d.exampleJP && <p>{d.exampleJP}</p>}</div>
+          <div key={i}><p>{d.definition}</p>{d.example && <span className="block"><span className="block italic">{d.example}</span><SpeechControls text={d.example} label="保存した例文" /></span>}{d.exampleJP && <p>{d.exampleJP}</p>}</div>
         )}
         <details className="border rounded p-3">
           <summary className="cursor-pointer font-medium">ほかの意味・すべての例文を見る</summary>
@@ -66,7 +68,7 @@ export default function VocabularyCard({
             <ul className="list-disc ml-5 space-y-3">{m.definitions.map((d: any, j: number) => <li key={j}>
               {d.selected && <span className="text-blue-600">★ 覚えたい意味 </span>}{d.definition}
               <p className="text-blue-600">{d.jp || translations[`${item.content}-${i}-${j}`]}</p>
-              {d.example && <p className="italic">{d.example}</p>}
+              {d.example && <span className="block"><span className="block italic">{d.example}</span><SpeechControls text={d.example} label="保存した例文" /></span>}
               {d.exampleJP && <p>{d.exampleJP}</p>}
             </li>)}</ul>
           </div>)}
