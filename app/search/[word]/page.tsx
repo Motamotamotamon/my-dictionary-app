@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import SpeechControls from "@/components/SpeechControls";
 import SaveButton from "@/components/SaveButton";
 
 export default function WordDetail() {
@@ -35,20 +36,11 @@ function WordContent({ word }: { word: string }) {
   const [explain,setExplain] = useState<any>(null);
   const [jpExplain,setJpExplain] = useState<any>({});
 
-  const audio =
-    data?.[0]?.phonetics?.find((p:any)=>p.audio)?.audio;
-
   const phonetic =
     data?.[0]?.phonetics?.find((p:any)=>p.text)?.text;
 
   const example =
     data?.[0]?.meanings?.[0]?.definitions?.[0]?.example;
-
-  const playAudio = () => {
-    if (!audio) return;
-    const sound = new Audio(audio);
-    sound.play();
-  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -236,11 +228,7 @@ function WordContent({ word }: { word: string }) {
 
           {word}
 
-          {audio && (
-            <button onClick={playAudio} className="text-2xl">
-              🔊
-            </button>
-          )}
+          <SpeechControls text={word} label={word} />
 
         </h1>
 
@@ -282,7 +270,7 @@ function WordContent({ word }: { word: string }) {
             <div key={j} className="mb-4">
 
               <p>• {d.definition}</p>
-              {d.example && <p className="italic mt-2">{d.example}</p>}
+              {d.example && <span className="block mt-2"><span className="block italic">{d.example}</span><SpeechControls text={d.example} label="例文" /></span>}
               {d.exampleJP && <p className="text-blue-600">{d.exampleJP}</p>}
 
               {jpDefinitions[d.definition] && (
@@ -314,6 +302,7 @@ function WordContent({ word }: { word: string }) {
           <p className="italic mt-2">
             {example}
           </p>
+          <SpeechControls text={example} label="例文" />
 
         </div>
 
@@ -338,6 +327,7 @@ function WordContent({ word }: { word: string }) {
                 <p className="font-medium">
                   {ex.en}
                 </p>
+                <SpeechControls text={ex.en} label="AI例文" />
 
                 <p className="text-blue-600 text-sm mt-1">
                   → {ex.jp}
@@ -387,6 +377,7 @@ AI Explanation
 <br/>
 {explain.example}
 </p>
+{explain.example && <SpeechControls text={explain.example} label="解説の例文" />}
 
 <p className="text-blue-600">
 → {explain.exampleJP}
