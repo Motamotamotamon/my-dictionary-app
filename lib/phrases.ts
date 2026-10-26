@@ -1,3 +1,4 @@
+import { corpusEntry, corpusWords } from "@/lib/wordnet";
 // Original learning notes and examples; references are for sense verification.
 const reference = "https://dictionary.cambridge.org/dictionary/english/";
 const notes: Record<string, { jp: string; senses: [string, string, string, string][]; ref: string }> = {
@@ -46,7 +47,7 @@ export function phraseEntry(value: string) {
   const input = normalizeExpression(value).toLowerCase();
   const word = Object.prototype.hasOwnProperty.call(aliases, input) ? aliases[input] : input;
   const note = Object.prototype.hasOwnProperty.call(notes, word) ? notes[word] : undefined;
-  if (!note) return null;
+  if (!note) return corpusEntry(word);
   return {
     word, jp: note.jp, phonetics: [], source: "アプリの熟語学習ノート",
     sourceUrls: [reference + note.ref],
@@ -57,6 +58,7 @@ export function phraseEntry(value: string) {
 // Explicit aliases only: no speculative replacement of arbitrary sentences.
 const aliases: Record<string, string> = {
   "went out with": "go out with", "going out with": "go out with", "gone out with": "go out with",
+  "dealt with": "deal with",
   "gave up": "give up", "given up": "give up", "giving up": "give up",
   "looked up": "look up", "looking up": "look up", "looked after": "look after", "looking for": "look for",
   "looked forward to": "look forward to", "looking forward to": "look forward to",
@@ -80,11 +82,13 @@ function distance(a: string, b: string) {
 export function phraseSuggestions(value: string) {
   const query = normalizeExpression(value).toLowerCase();
   if (!query || query.length > 100) return [];
-  return Object.entries(notes).map(([word, note]) => {
+  const words = new Set([...Object.keys(notes), ...corpusWords]);
+  return [...words].map(word => {
+    const note = Object.prototype.hasOwnProperty.call(notes, word) ? notes[word] : undefined;
     const score = word === query || aliases[query] === word ? 100 :
-      word.startsWith(query) ? 80 : word.includes(query) || note.jp.includes(query) ? 60 :
+      word.startsWith(query) ? 80 : word.includes(query) || note?.jp.includes(query) ? 60 :
       query.length >= 5 && distance(query, word) <= 2 ? 40 : 0;
-    return { word, jp: note.jp, score };
+    return { word, jp: note?.jp || "英語辞書の表現", score };
   }).filter(item => item.score > 0).sort((a, b) => b.score - a.score || a.word.localeCompare(b.word)).slice(0, 6)
     .map(({ word, jp }) => ({ word, jp }));
 }
