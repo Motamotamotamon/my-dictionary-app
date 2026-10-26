@@ -22,6 +22,7 @@ export default function WordDetail() {
 
 function WordContent({ word }: { word: string }) {
 
+  const [suggestions, setSuggestions] = useState<{ word: string; jp: string }[]>([]);
   const [manualMeaning, setManualMeaning] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -46,6 +47,7 @@ function WordContent({ word }: { word: string }) {
     const controller = new AbortController();
     const active = () => !controller.signal.aborted;
 
+    setSuggestions([]);
     setLoading(true);
     setError("");
     setData(null);
@@ -158,6 +160,12 @@ function WordContent({ word }: { word: string }) {
       return () => controller.abort();
     }
 
+    void (async () => {
+      try {
+        const items = await request(`/api/phrases?q=${encodeURIComponent(word)}`);
+        if (active() && Array.isArray(items)) setSuggestions(items);
+      } catch { /* Suggestions are optional. */ }
+    })();
     void loadDictionary();
     void loadRelated("rel_syn", 6, setSynonyms);
     void loadRelated("rel_ant", 6, setAntonyms);
@@ -209,6 +217,10 @@ function WordContent({ word }: { word: string }) {
     return (
       <div className="p-10 text-center">
         <p className="text-xl">辞書に見つかりませんでした</p>
+        {suggestions.length > 0 && <nav aria-label="熟語の候補" className="my-4 space-y-2">
+          <p>こちらの表現ですか？</p>
+          {suggestions.map(item => <Link key={item.word} href={`/search/${encodeURIComponent(item.word)}`} className="block border rounded p-3 text-blue-600">{item.word}：{item.jp}</Link>)}
+        </nav>}
         <p className="mt-3">「{word}」の日本語の意味を入力して、単語帳に保存できます。</p>
         <label className="block mt-4" htmlFor="manual-meaning">日本語の意味</label>
         <input id="manual-meaning" className="border rounded p-3 w-full mt-2" value={manualMeaning}
@@ -255,6 +267,7 @@ function WordContent({ word }: { word: string }) {
       />
 
       {data[0]?.source && <p className="text-sm text-gray-500">出典：{data[0].source}</p>}
+      {data[0]?.word?.toLowerCase() !== word.toLowerCase() && <p className="text-sm text-gray-600">基本形「{data[0]?.word}」の意味を表示しています。</p>}
       {/* meanings */}
 
       {data[0]?.meanings?.map((m:any,i:number)=>(
