@@ -8,7 +8,14 @@ import SaveButton from "@/components/SaveButton";
 export default function WordDetail() {
 
   const params = useParams();
-  const word = params.word as string;
+  const rawWord = typeof params.word === "string" ? params.word : "";
+  let decodedWord = rawWord;
+  try {
+    decodedWord = decodeURIComponent(rawWord);
+  } catch {
+    // Keep literal percent signs and malformed escapes usable.
+  }
+  const word = decodedWord.trim().replace(/\s+/g, " ");
   return <WordContent key={word} word={word} />;
 }
 
