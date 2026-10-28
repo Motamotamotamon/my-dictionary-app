@@ -1,0 +1,1493 @@
+{
+  "notes": {
+    "a piece of cake": {
+      "jp": "とても簡単なこと",
+      "senses": [
+        [
+          "A task that is very easy.",
+          "とても簡単なこと",
+          "With this guide, setting up the printer was a piece of cake.",
+          "このガイドがあれば、プリンターの設定はとても簡単でした。"
+        ]
+      ]
+    },
+    "break the ice": {
+      "jp": "初対面などの緊張をほぐす",
+      "senses": [
+        [
+          "To make people feel more comfortable at the start of a conversation.",
+          "初対面などの緊張をほぐす",
+          "A funny introduction helped break the ice.",
+          "面白い自己紹介で場の緊張がほぐれました。"
+        ]
+      ]
+    },
+    "under the weather": {
+      "jp": "体調がすぐれない",
+      "senses": [
+        [
+          "Feeling slightly ill.",
+          "体調がすぐれない",
+          "I stayed home because I was feeling under the weather.",
+          "体調がすぐれなかったので家にいました。"
+        ]
+      ]
+    },
+    "once in a blue moon": {
+      "jp": "ごくまれに",
+      "senses": [
+        [
+          "Very rarely.",
+          "ごくまれに",
+          "We go bowling once in a blue moon.",
+          "私たちはごくまれにボウリングに行きます。"
+        ]
+      ]
+    },
+    "out of the blue": {
+      "jp": "突然・思いがけず",
+      "senses": [
+        [
+          "Unexpectedly, without an obvious warning.",
+          "突然・思いがけず",
+          "An old classmate called me out of the blue.",
+          "昔の同級生から突然電話が来ました。"
+        ]
+      ]
+    },
+    "on the same page": {
+      "jp": "認識や方針が一致している",
+      "senses": [
+        [
+          "Sharing an understanding or agreement about a matter.",
+          "認識や方針が一致している",
+          "Let us check that we are on the same page about the deadline.",
+          "締め切りについて認識が一致しているか確認しましょう。"
+        ]
+      ]
+    },
+    "get the hang of": {
+      "jp": "〜のコツをつかむ",
+      "senses": [
+        [
+          "To learn how to handle a task with some skill.",
+          "〜のコツをつかむ",
+          "I am getting the hang of using chopsticks.",
+          "箸を使うコツがつかめてきました。"
+        ]
+      ]
+    },
+    "a blessing in disguise": {
+      "jp": "最初は不運に見えて実は幸運なこと",
+      "senses": [
+        [
+          "An unwelcome event that later turns out to be helpful.",
+          "最初は不運に見えて実は幸運なこと",
+          "Missing that train was a blessing in disguise.",
+          "あの電車に乗り遅れたことが、結果的には幸いでした。"
+        ]
+      ]
+    },
+    "the last straw": {
+      "jp": "我慢の限界を超えさせる最後の出来事",
+      "senses": [
+        [
+          "The final problem that makes a situation unbearable.",
+          "我慢の限界を超えさせる最後の出来事",
+          "Another canceled meeting was the last straw.",
+          "また会議が中止になり、ついに我慢の限界に達しました。"
+        ]
+      ]
+    },
+    "the tip of the iceberg": {
+      "jp": "氷山の一角",
+      "senses": [
+        [
+          "A small visible part of a much larger problem.",
+          "氷山の一角",
+          "These errors are only the tip of the iceberg.",
+          "これらの誤りは氷山の一角にすぎません。"
+        ]
+      ]
+    },
+    "a double-edged sword": {
+      "jp": "諸刃の剣・良い面と悪い面があるもの",
+      "senses": [
+        [
+          "Something that can bring both benefits and harm.",
+          "諸刃の剣・良い面と悪い面があるもの",
+          "Being reachable all day is a double-edged sword.",
+          "一日中連絡がつく状態には、良い面も悪い面もあります。"
+        ]
+      ]
+    },
+    "a rule of thumb": {
+      "jp": "経験に基づく大まかな目安",
+      "senses": [
+        [
+          "A practical guideline that is useful but not exact.",
+          "経験に基づく大まかな目安",
+          "As a rule of thumb, leave extra time for transfers.",
+          "大まかな目安として、乗り換えには余裕を持たせましょう。"
+        ]
+      ]
+    },
+    "a long shot": {
+      "jp": "成功の見込みが薄い試み",
+      "senses": [
+        [
+          "An attempt that is unlikely to succeed.",
+          "成功の見込みが薄い試み",
+          "It is a long shot, but I will ask about a cancellation.",
+          "望みは薄いですが、キャンセルがないか聞いてみます。"
+        ]
+      ]
+    },
+    "a pain in the neck": {
+      "jp": "厄介な人・面倒なこと（口語）",
+      "senses": [
+        [
+          "An annoying person or troublesome task.",
+          "厄介な人・面倒なこと（口語）",
+          "Filling out this form is a pain in the neck.",
+          "この書類に記入するのは面倒です。"
+        ]
+      ]
+    },
+    "a rip-off": {
+      "jp": "ぼったくり・不当に高いもの（口語）",
+      "senses": [
+        [
+          "Something sold at an unfairly high price.",
+          "ぼったくり・不当に高いもの（口語）",
+          "Twenty dollars for that tiny sandwich is a rip-off.",
+          "あの小さなサンドイッチに20ドルはぼったくりです。"
+        ]
+      ]
+    },
+    "a breath of fresh air": {
+      "jp": "新鮮で好ましい変化をもたらす人や物",
+      "senses": [
+        [
+          "A welcome change from what has become dull or unpleasant.",
+          "新鮮で好ましい変化をもたらす人や物",
+          "Her practical ideas were a breath of fresh air.",
+          "彼女の実用的なアイデアは、新鮮で好ましい変化をもたらしました。"
+        ]
+      ]
+    },
+    "a win-win situation": {
+      "jp": "双方に利益がある状況",
+      "senses": [
+        [
+          "A situation that benefits both sides.",
+          "双方に利益がある状況",
+          "Sharing the space was a win-win situation for both teams.",
+          "場所の共有は両チームにとって利益になりました。"
+        ]
+      ]
+    },
+    "a silver lining": {
+      "jp": "困難な状況の中の明るい面",
+      "senses": [
+        [
+          "A hopeful or positive aspect of a difficult situation.",
+          "困難な状況の中の明るい面",
+          "The silver lining was having more time with my family.",
+          "救いだったのは、家族と過ごす時間が増えたことでした。"
+        ]
+      ]
+    },
+    "food for thought": {
+      "jp": "じっくり考える材料",
+      "senses": [
+        [
+          "Something worth thinking about carefully.",
+          "じっくり考える材料",
+          "Your question gave me food for thought.",
+          "あなたの質問は、じっくり考えるきっかけになりました。"
+        ]
+      ]
+    },
+    "peace of mind": {
+      "jp": "安心・心の平穏",
+      "senses": [
+        [
+          "A feeling of being free from worry.",
+          "安心・心の平穏",
+          "Keeping a spare key gives me peace of mind.",
+          "予備の鍵を持っていると安心できます。"
+        ]
+      ]
+    },
+    "by the book": {
+      "jp": "規則どおりに",
+      "senses": [
+        [
+          "Following the rules or official procedures closely.",
+          "規則どおりに",
+          "We handled the application by the book.",
+          "私たちは規則どおりに申請を処理しました。"
+        ]
+      ]
+    },
+    "in the long run": {
+      "jp": "長い目で見れば",
+      "senses": [
+        [
+          "Over a long period, considering the eventual result.",
+          "長い目で見れば",
+          "Regular practice saves time in the long run.",
+          "定期的な練習は、長い目で見れば時間の節約になります。"
+        ]
+      ]
+    },
+    "in a nutshell": {
+      "jp": "一言で言えば・要するに",
+      "senses": [
+        [
+          "In a very brief summary.",
+          "一言で言えば・要するに",
+          "In a nutshell, we need more time.",
+          "要するに、もっと時間が必要です。"
+        ]
+      ]
+    },
+    "in the same boat": {
+      "jp": "同じ困った状況にある",
+      "senses": [
+        [
+          "In the same difficult situation as others.",
+          "同じ困った状況にある",
+          "We are all in the same boat while the system is down.",
+          "システムが停止している間は、みんな同じ困った状況です。"
+        ]
+      ]
+    },
+    "in hot water": {
+      "jp": "困った立場にある・叱られそうである",
+      "senses": [
+        [
+          "In trouble because of something one has done.",
+          "困った立場にある・叱られそうである",
+          "He was in hot water for losing the keys.",
+          "彼は鍵をなくして、まずい立場になっていました。"
+        ]
+      ]
+    },
+    "in no time": {
+      "jp": "あっという間に",
+      "senses": [
+        [
+          "Very quickly or very soon.",
+          "あっという間に",
+          "With your help, we finished in no time.",
+          "あなたの助けで、あっという間に終わりました。"
+        ]
+      ]
+    },
+    "in the middle of nowhere": {
+      "jp": "人里離れた場所に",
+      "senses": [
+        [
+          "In a remote place far from towns or useful facilities.",
+          "人里離れた場所に",
+          "The cabin was in the middle of nowhere.",
+          "その小屋は人里離れた場所にありました。"
+        ]
+      ]
+    },
+    "in other words": {
+      "jp": "言い換えると",
+      "senses": [
+        [
+          "Used to restate an idea in a different way.",
+          "言い換えると",
+          "It is optional; in other words, you do not have to join.",
+          "任意です。つまり、参加しなくてもよいということです。"
+        ]
+      ]
+    },
+    "in terms of": {
+      "jp": "〜の点では・〜という観点で",
+      "senses": [
+        [
+          "When considering a particular aspect.",
+          "〜の点では・〜という観点で",
+          "This route is better in terms of cost.",
+          "費用の点では、こちらのルートのほうがよいです。"
+        ]
+      ]
+    },
+    "in charge of": {
+      "jp": "〜を担当して・〜の責任者で",
+      "senses": [
+        [
+          "Responsible for managing someone or something.",
+          "〜を担当して・〜の責任者で",
+          "Mina is in charge of the schedule.",
+          "ミナが日程を担当しています。"
+        ]
+      ]
+    },
+    "on cloud nine": {
+      "jp": "大喜びで・とても幸せで",
+      "senses": [
+        [
+          "Extremely happy.",
+          "大喜びで・とても幸せで",
+          "She was on cloud nine after getting the job.",
+          "採用が決まり、彼女は大喜びでした。"
+        ]
+      ]
+    },
+    "on thin ice": {
+      "jp": "危うい立場にある",
+      "senses": [
+        [
+          "In a risky position where another mistake could cause trouble.",
+          "危うい立場にある",
+          "After missing two deadlines, I was on thin ice.",
+          "締め切りを2回守れず、私は危うい立場にありました。"
+        ]
+      ]
+    },
+    "on the fence": {
+      "jp": "態度を決めかねている",
+      "senses": [
+        [
+          "Undecided between alternatives.",
+          "態度を決めかねている",
+          "I am still on the fence about moving.",
+          "引っ越すかどうか、まだ決めかねています。"
+        ]
+      ]
+    },
+    "on purpose": {
+      "jp": "わざと・意図的に",
+      "senses": [
+        [
+          "Intentionally rather than accidentally.",
+          "わざと・意図的に",
+          "I left the door open on purpose.",
+          "わざとドアを開けておきました。"
+        ]
+      ]
+    },
+    "on second thought": {
+      "jp": "考え直してみると",
+      "senses": [
+        [
+          "Used when reconsidering an earlier decision.",
+          "考え直してみると",
+          "On second thought, I will take the earlier train.",
+          "考え直して、もっと早い電車にします。"
+        ]
+      ]
+    },
+    "on a roll": {
+      "jp": "好調で・成功が続いて",
+      "senses": [
+        [
+          "Having a series of successes.",
+          "好調で・成功が続いて",
+          "Our team is on a roll this month.",
+          "今月は私たちのチームが好調です。"
+        ]
+      ]
+    },
+    "out of hand": {
+      "jp": "手に負えなくなって",
+      "senses": [
+        [
+          "Beyond control.",
+          "手に負えなくなって",
+          "The argument quickly got out of hand.",
+          "口論はすぐに手に負えなくなりました。"
+        ]
+      ]
+    },
+    "out of the question": {
+      "jp": "論外で・不可能で",
+      "senses": [
+        [
+          "Not possible or not acceptable.",
+          "論外で・不可能で",
+          "Traveling this week is out of the question.",
+          "今週旅行するのは無理です。"
+        ]
+      ]
+    },
+    "out of reach": {
+      "jp": "手が届かない・達成できない",
+      "senses": [
+        [
+          "Too far away or too difficult to obtain.",
+          "手が届かない・達成できない",
+          "The top shelf is out of reach for me.",
+          "一番上の棚には手が届きません。"
+        ]
+      ]
+    },
+    "off the top of my head": {
+      "jp": "ぱっと思いつく限りでは・記憶だけで",
+      "senses": [
+        [
+          "From memory, without checking or preparing.",
+          "ぱっと思いつく限りでは・記憶だけで",
+          "Off the top of my head, I can think of three options.",
+          "ぱっと思いつく限りでは、選択肢が3つあります。"
+        ]
+      ]
+    },
+    "at the end of the day": {
+      "jp": "結局のところ（比喩）",
+      "senses": [
+        [
+          "When all the important facts have been considered.",
+          "結局のところ（比喩）",
+          "At the end of the day, safety matters most.",
+          "結局のところ、安全が一番大切です。"
+        ]
+      ]
+    },
+    "at a loss": {
+      "jp": "途方に暮れて・どうすればよいか分からず",
+      "senses": [
+        [
+          "Unsure what to say or do.",
+          "途方に暮れて・どうすればよいか分からず",
+          "I was at a loss for words.",
+          "私は何と言えばよいか分かりませんでした。"
+        ]
+      ]
+    },
+    "at odds with": {
+      "jp": "〜と対立して・〜と食い違って",
+      "senses": [
+        [
+          "In disagreement or conflict with someone or something.",
+          "〜と対立して・〜と食い違って",
+          "The results are at odds with our prediction.",
+          "結果は私たちの予測と食い違っています。"
+        ]
+      ]
+    },
+    "by all means": {
+      "jp": "ぜひ・もちろん（許可や同意）",
+      "senses": [
+        [
+          "Used to give willing permission or encouragement.",
+          "ぜひ・もちろん（許可や同意）",
+          "By all means, ask if anything is unclear.",
+          "分からないことがあれば、ぜひ聞いてください。"
+        ]
+      ]
+    },
+    "by no means": {
+      "jp": "決して〜ではない",
+      "senses": [
+        [
+          "Not at all; used to emphasize a negative statement.",
+          "決して〜ではない",
+          "This is by no means the only solution.",
+          "これが唯一の解決策というわけでは決してありません。"
+        ]
+      ]
+    },
+    "for good": {
+      "jp": "永久に・きっぱりと",
+      "senses": [
+        [
+          "Permanently.",
+          "永久に・きっぱりと",
+          "They closed the shop for good.",
+          "彼らは店を永久に閉めました。"
+        ]
+      ]
+    },
+    "for the time being": {
+      "jp": "当面は・さしあたり",
+      "senses": [
+        [
+          "For now, until the situation changes.",
+          "当面は・さしあたり",
+          "We will use this room for the time being.",
+          "当面はこの部屋を使います。"
+        ]
+      ]
+    },
+    "from scratch": {
+      "jp": "ゼロから・最初から",
+      "senses": [
+        [
+          "Starting without a prepared base or previous work.",
+          "ゼロから・最初から",
+          "We built the website from scratch.",
+          "私たちはゼロからそのウェブサイトを作りました。"
+        ]
+      ]
+    },
+    "so far so good": {
+      "jp": "今のところ順調",
+      "senses": [
+        [
+          "Things have gone well up to this point.",
+          "今のところ順調",
+          "The trial started yesterday; so far so good.",
+          "試行は昨日始まり、今のところ順調です。"
+        ]
+      ]
+    },
+    "better late than never": {
+      "jp": "遅くても、やらないよりはよい",
+      "senses": [
+        [
+          "It is preferable to do something late rather than not do it.",
+          "遅くても、やらないよりはよい",
+          "I finally replied—better late than never.",
+          "ようやく返信しました。遅くても、しないよりはよいですね。"
+        ]
+      ]
+    },
+    "break a leg": {
+      "jp": "頑張って・成功を祈る（出演前など）",
+      "senses": [
+        [
+          "A friendly wish for success, especially before a performance.",
+          "頑張って・成功を祈る（出演前など）",
+          "Your concert is tonight? Break a leg!",
+          "今夜がコンサートなんですね。成功を祈っています！"
+        ]
+      ]
+    },
+    "bite the bullet": {
+      "jp": "覚悟を決めて嫌なことに取り組む",
+      "senses": [
+        [
+          "To face a necessary but unpleasant task with determination.",
+          "覚悟を決めて嫌なことに取り組む",
+          "I decided to bite the bullet and make the difficult call.",
+          "覚悟を決めて、気の重い電話をかけることにしました。"
+        ]
+      ]
+    },
+    "beat around the bush": {
+      "jp": "遠回しに言う・要点を避ける",
+      "senses": [
+        [
+          "To avoid saying the main point directly.",
+          "遠回しに言う・要点を避ける",
+          "Please stop beating around the bush and tell me what happened.",
+          "遠回しに言わず、何があったのか教えてください。"
+        ]
+      ]
+    },
+    "spill the beans": {
+      "jp": "秘密をうっかり話す・ばらす",
+      "senses": [
+        [
+          "To reveal information that was meant to be secret.",
+          "秘密をうっかり話す・ばらす",
+          "Do not spill the beans about the surprise party.",
+          "サプライズパーティーのことはばらさないでください。"
+        ]
+      ]
+    },
+    "let the cat out of the bag": {
+      "jp": "うっかり秘密を漏らす",
+      "senses": [
+        [
+          "To accidentally reveal a secret.",
+          "うっかり秘密を漏らす",
+          "I let the cat out of the bag about the gift.",
+          "プレゼントのことをうっかり話してしまいました。"
+        ]
+      ]
+    },
+    "hit the nail on the head": {
+      "jp": "的を射る",
+      "senses": [
+        [
+          "To identify or describe something exactly right.",
+          "的を射る",
+          "Your comment hit the nail on the head.",
+          "あなたの指摘は的を射ていました。"
+        ]
+      ]
+    },
+    "hit the sack": {
+      "jp": "寝る（口語）",
+      "senses": [
+        [
+          "To go to bed.",
+          "寝る（口語）",
+          "I have an early start, so I will hit the sack.",
+          "明日は朝が早いので寝ます。"
+        ]
+      ]
+    },
+    "call it a day": {
+      "jp": "今日の仕事などを切り上げる",
+      "senses": [
+        [
+          "To stop working on something for the day.",
+          "今日の仕事などを切り上げる",
+          "We have done enough; let us call it a day.",
+          "十分やりました。今日はここまでにしましょう。"
+        ]
+      ]
+    },
+    "cut corners": {
+      "jp": "手間や費用を惜しんで手順を省く",
+      "senses": [
+        [
+          "To skip proper steps to save time or money, often reducing quality.",
+          "手間や費用を惜しんで手順を省く",
+          "We cannot cut corners on safety checks.",
+          "安全確認で手抜きをするわけにはいきません。"
+        ]
+      ]
+    },
+    "cost an arm and a leg": {
+      "jp": "ものすごく高くつく",
+      "senses": [
+        [
+          "To be extremely expensive.",
+          "ものすごく高くつく",
+          "A hotel near the stadium costs an arm and a leg.",
+          "スタジアム近くのホテルはものすごく高いです。"
+        ]
+      ]
+    },
+    "go the extra mile": {
+      "jp": "期待以上の努力をする",
+      "senses": [
+        [
+          "To make more effort than is normally required.",
+          "期待以上の努力をする",
+          "She went the extra mile to help a new colleague.",
+          "彼女は新しい同僚を助けるため、期待以上に尽力しました。"
+        ]
+      ]
+    },
+    "go with the flow": {
+      "jp": "流れに身を任せる",
+      "senses": [
+        [
+          "To accept how events develop rather than trying to control everything.",
+          "流れに身を任せる",
+          "On holiday, I prefer to go with the flow.",
+          "休暇中は、流れに身を任せるのが好きです。"
+        ]
+      ]
+    },
+    "keep an eye on": {
+      "jp": "〜を見守る・注意して見る",
+      "senses": [
+        [
+          "To watch someone or something to notice problems or changes.",
+          "〜を見守る・注意して見る",
+          "Could you keep an eye on the soup?",
+          "スープの様子を見ていてもらえますか。"
+        ]
+      ]
+    },
+    "keep in mind": {
+      "jp": "〜を覚えておく・考慮する",
+      "senses": [
+        [
+          "To remember something when deciding or acting.",
+          "〜を覚えておく・考慮する",
+          "Keep in mind that the last bus leaves at nine.",
+          "最終バスが9時に出ることを覚えておいてください。"
+        ]
+      ]
+    },
+    "keep in touch": {
+      "jp": "連絡を取り合う",
+      "senses": [
+        [
+          "To continue communicating with someone.",
+          "連絡を取り合う",
+          "We still keep in touch after graduation.",
+          "卒業後も連絡を取り合っています。"
+        ]
+      ]
+    },
+    "lose touch with": {
+      "jp": "〜と連絡が途絶える",
+      "senses": [
+        [
+          "To stop communicating with someone over time.",
+          "〜と連絡が途絶える",
+          "I lost touch with my old roommate.",
+          "昔のルームメートとは連絡が途絶えました。"
+        ]
+      ]
+    },
+    "make ends meet": {
+      "jp": "収入の範囲で生活をやりくりする",
+      "senses": [
+        [
+          "To have enough money to cover everyday expenses.",
+          "収入の範囲で生活をやりくりする",
+          "They took extra shifts to make ends meet.",
+          "生活費を賄うため、彼らは追加の勤務を引き受けました。"
+        ]
+      ]
+    },
+    "make up one's mind": {
+      "jp": "決心する・決める",
+      "senses": [
+        [
+          "To decide after considering alternatives.",
+          "決心する・決める",
+          "I need another day to make up my mind.",
+          "決めるまでに、あと1日必要です。"
+        ]
+      ]
+    },
+    "make the most of": {
+      "jp": "〜を最大限に活用する",
+      "senses": [
+        [
+          "To use an opportunity or resource as well as possible.",
+          "〜を最大限に活用する",
+          "Let us make the most of the good weather.",
+          "この好天を最大限に生かしましょう。"
+        ]
+      ]
+    },
+    "make sense": {
+      "jp": "意味が通る・筋が通る",
+      "senses": [
+        [
+          "To be understandable or reasonable.",
+          "意味が通る・筋が通る",
+          "Your explanation makes sense now.",
+          "あなたの説明が今は理解できます。"
+        ]
+      ]
+    },
+    "take it easy": {
+      "jp": "無理せず休む・気楽にする",
+      "senses": [
+        [
+          "To relax or avoid too much effort.",
+          "無理せず休む・気楽にする",
+          "Take it easy this weekend.",
+          "今週末は無理せずゆっくりしてください。"
+        ]
+      ]
+    },
+    "take for granted": {
+      "jp": "〜を当然と思う・ありがたみを忘れる",
+      "senses": [
+        [
+          "To assume something will always be available without appreciating it.",
+          "〜を当然と思う・ありがたみを忘れる",
+          "We often take clean water for granted.",
+          "私たちはきれいな水を、つい当たり前と思ってしまいます。"
+        ]
+      ]
+    },
+    "take into account": {
+      "jp": "〜を考慮に入れる",
+      "senses": [
+        [
+          "To consider a factor when making a judgment or plan.",
+          "〜を考慮に入れる",
+          "We must take travel time into account.",
+          "移動時間を考慮に入れなければなりません。"
+        ]
+      ]
+    },
+    "take one's time": {
+      "jp": "焦らず時間をかける",
+      "senses": [
+        [
+          "To do something without rushing.",
+          "焦らず時間をかける",
+          "I want to take my time choosing a new camera.",
+          "新しいカメラは時間をかけて選びたいです。"
+        ]
+      ]
+    },
+    "pull someone's leg": {
+      "jp": "からかう・冗談でだます",
+      "senses": [
+        [
+          "To tease someone by telling them something untrue as a joke.",
+          "からかう・冗談でだます",
+          "Are you pulling my leg about the prize?",
+          "その賞の話は、私をからかっているんですか。"
+        ]
+      ]
+    },
+    "get cold feet": {
+      "jp": "直前になって怖じ気づく",
+      "senses": [
+        [
+          "To become nervous about a planned action and hesitate.",
+          "直前になって怖じ気づく",
+          "He got cold feet before the audition.",
+          "彼はオーディションの前に怖じ気づきました。"
+        ]
+      ]
+    },
+    "get on someone's nerves": {
+      "jp": "神経にさわる・いらいらさせる",
+      "senses": [
+        [
+          "To repeatedly annoy someone.",
+          "神経にさわる・いらいらさせる",
+          "That constant clicking gets on my nerves.",
+          "あの絶え間ないカチカチ音にはいらいらします。"
+        ]
+      ]
+    },
+    "give someone a hand": {
+      "jp": "手を貸す・手伝う",
+      "senses": [
+        [
+          "To help someone with a task.",
+          "手を貸す・手伝う",
+          "Could you give me a hand with these boxes?",
+          "この箱を運ぶのを手伝ってもらえますか。"
+        ]
+      ]
+    },
+    "give it a shot": {
+      "jp": "試してみる（口語）",
+      "senses": [
+        [
+          "To try something even if success is uncertain.",
+          "試してみる（口語）",
+          "I have never cooked this dish, but I will give it a shot.",
+          "この料理は初めてですが、試してみます。"
+        ]
+      ]
+    },
+    "get away with": {
+      "jp": "〜をして罰や非難を免れる",
+      "senses": [
+        [
+          "To avoid consequences for doing something wrong.",
+          "〜をして罰や非難を免れる",
+          "You cannot get away with copying the answers.",
+          "答えを写しても、何もとがめられずに済むわけではありません。"
+        ]
+      ]
+    },
+    "be supposed to": {
+      "jp": "〜することになっている・〜すべきである",
+      "senses": [
+        [
+          "To be expected or required to do something under a plan or rule.",
+          "〜することになっている・〜すべきである",
+          "We are supposed to meet at the east entrance.",
+          "東口で会うことになっています。"
+        ]
+      ]
+    },
+    "be about to": {
+      "jp": "まさに〜しようとしている",
+      "senses": [
+        [
+          "To be going to do something very soon.",
+          "まさに〜しようとしている",
+          "I was about to leave when you called.",
+          "電話をくれたとき、ちょうど出かけるところでした。"
+        ]
+      ]
+    },
+    "be likely to": {
+      "jp": "〜する可能性が高い",
+      "senses": [
+        [
+          "To be expected to do or experience something.",
+          "〜する可能性が高い",
+          "The road is likely to be busy tonight.",
+          "今夜は道路が混む可能性が高いです。"
+        ]
+      ]
+    },
+    "be willing to": {
+      "jp": "進んで〜する・〜してもよいと思う",
+      "senses": [
+        [
+          "To be ready to do something without being forced.",
+          "進んで〜する・〜してもよいと思う",
+          "I am willing to try a different approach.",
+          "別の方法を試してもよいと思っています。"
+        ]
+      ]
+    },
+    "be worth": {
+      "jp": "〜の価値がある（後ろは名詞・動名詞）",
+      "senses": [
+        [
+          "To have enough value to justify a cost or effort; use a noun or an -ing form.",
+          "〜の価値がある（後ろは名詞・動名詞）",
+          "This museum is worth visiting.",
+          "この博物館は訪れる価値があります。"
+        ]
+      ]
+    },
+    "feel like": {
+      "jp": "〜が欲しい・〜したい気分だ",
+      "senses": [
+        [
+          "To want something or want to do something; use a noun or an -ing form.",
+          "〜が欲しい・〜したい気分だ",
+          "I feel like taking a short walk.",
+          "少し散歩したい気分です。"
+        ]
+      ]
+    },
+    "would rather": {
+      "jp": "むしろ〜したい（後ろは動詞の原形）",
+      "senses": [
+        [
+          "To prefer one action over another; followed by the base form of a verb.",
+          "むしろ〜したい（後ろは動詞の原形）",
+          "I would rather stay home tonight.",
+          "今夜はむしろ家にいたいです。"
+        ]
+      ]
+    },
+    "had better": {
+      "jp": "〜したほうがよい（忠告・警告）",
+      "senses": [
+        [
+          "Used to advise an action, often implying a problem if it is not taken.",
+          "〜したほうがよい（忠告・警告）",
+          "You had better check the departure time.",
+          "出発時刻を確認しておいたほうがよいです。"
+        ]
+      ]
+    },
+    "can't help": {
+      "jp": "〜せずにはいられない（この用法では後ろは動名詞）",
+      "senses": [
+        [
+          "To be unable to stop a reaction or action; followed by an -ing form in this use.",
+          "〜せずにはいられない（この用法では後ろは動名詞）",
+          "I cannot help smiling at that photo.",
+          "その写真を見ると、つい笑顔になります。"
+        ]
+      ]
+    },
+    "end up": {
+      "jp": "結局〜になる・〜することになる",
+      "senses": [
+        [
+          "To finally reach a situation, often one that was not planned.",
+          "結局〜になる・〜することになる",
+          "We ended up walking home.",
+          "私たちは結局、歩いて帰ることになりました。"
+        ]
+      ]
+    },
+    "as far as i know": {
+      "jp": "私の知る限りでは",
+      "senses": [
+        [
+          "According to the information available to me.",
+          "私の知る限りでは",
+          "As far as I know, the shop is open today.",
+          "私の知る限りでは、その店は今日営業しています。"
+        ]
+      ]
+    },
+    "as soon as": {
+      "jp": "〜するとすぐに",
+      "senses": [
+        [
+          "Immediately after something happens.",
+          "〜するとすぐに",
+          "I will call you as soon as I arrive.",
+          "着いたらすぐに電話します。"
+        ]
+      ]
+    },
+    "as long as": {
+      "jp": "〜する限り・〜という条件なら",
+      "senses": [
+        [
+          "Provided that a particular condition is met.",
+          "〜する限り・〜という条件なら",
+          "You can borrow it as long as you return it tomorrow.",
+          "明日返してくれるなら、借りてよいですよ。"
+        ]
+      ]
+    },
+    "even though": {
+      "jp": "〜にもかかわらず（実際の事実）",
+      "senses": [
+        [
+          "Despite the fact that something is true.",
+          "〜にもかかわらず（実際の事実）",
+          "We went outside even though it was raining.",
+          "雨が降っていましたが、私たちは外に出ました。"
+        ]
+      ]
+    },
+    "even if": {
+      "jp": "たとえ〜でも（仮定の条件）",
+      "senses": [
+        [
+          "Whether or not a possible condition occurs.",
+          "たとえ〜でも（仮定の条件）",
+          "I will go even if it rains.",
+          "たとえ雨が降っても行きます。"
+        ]
+      ]
+    },
+    "in case": {
+      "jp": "〜するといけないので・〜に備えて",
+      "senses": [
+        [
+          "To prepare for something that might happen.",
+          "〜するといけないので・〜に備えて",
+          "Take a charger in case your battery runs low.",
+          "電池が減ったときに備えて、充電器を持っていってください。"
+        ]
+      ]
+    },
+    "no matter what": {
+      "jp": "何があっても",
+      "senses": [
+        [
+          "Regardless of what happens.",
+          "何があっても",
+          "I will support you no matter what.",
+          "何があっても、あなたを支えます。"
+        ]
+      ]
+    },
+    "when it comes to": {
+      "jp": "〜のこととなると・〜に関しては",
+      "senses": [
+        [
+          "When the subject being considered is something particular.",
+          "〜のこととなると・〜に関しては",
+          "When it comes to coffee, she knows a lot.",
+          "コーヒーのことなら、彼女はとても詳しいです。"
+        ]
+      ]
+    },
+    "not necessarily": {
+      "jp": "必ずしも〜ではない",
+      "senses": [
+        [
+          "Not true in every case or not an unavoidable conclusion.",
+          "必ずしも〜ではない",
+          "More expensive does not necessarily mean better.",
+          "高価なものが必ずしもよいとは限りません。"
+        ]
+      ]
+    },
+    "let alone": {
+      "jp": "まして〜はなおさら",
+      "senses": [
+        [
+          "Used to add something even less possible than what was just mentioned.",
+          "まして〜はなおさら",
+          "I have no time for lunch, let alone a long meeting.",
+          "昼食の時間もないのに、長い会議などなおさら無理です。"
+        ]
+      ]
+    }
+  },
+  "aliases": {
+    "am about to": "be about to",
+    "am likely to": "be likely to",
+    "am supposed to": "be supposed to",
+    "am willing to": "be willing to",
+    "am worth": "be worth",
+    "are about to": "be about to",
+    "are likely to": "be likely to",
+    "are supposed to": "be supposed to",
+    "are willing to": "be willing to",
+    "are worth": "be worth",
+    "beat about the bush": "beat around the bush",
+    "beaten around the bush": "beat around the bush",
+    "beating around the bush": "beat around the bush",
+    "beats around the bush": "beat around the bush",
+    "been about to": "be about to",
+    "been likely to": "be likely to",
+    "been supposed to": "be supposed to",
+    "been willing to": "be willing to",
+    "been worth": "be worth",
+    "being about to": "be about to",
+    "being likely to": "be likely to",
+    "being supposed to": "be supposed to",
+    "being willing to": "be willing to",
+    "being worth": "be worth",
+    "bit the bullet": "bite the bullet",
+    "bites the bullet": "bite the bullet",
+    "biting the bullet": "bite the bullet",
+    "bitten the bullet": "bite the bullet",
+    "breaking a leg": "break a leg",
+    "breaking the ice": "break the ice",
+    "breaks a leg": "break a leg",
+    "breaks the ice": "break the ice",
+    "broke a leg": "break a leg",
+    "broke the ice": "break the ice",
+    "broken a leg": "break a leg",
+    "broken the ice": "break the ice",
+    "called it a day": "call it a day",
+    "calling it a day": "call it a day",
+    "calls it a day": "call it a day",
+    "can not help": "can't help",
+    "cannot help": "can't help",
+    "costing an arm and a leg": "cost an arm and a leg",
+    "costs an arm and a leg": "cost an arm and a leg",
+    "cuts corners": "cut corners",
+    "cutting corners": "cut corners",
+    "ended up": "end up",
+    "ending up": "end up",
+    "ends up": "end up",
+    "feeling like": "feel like",
+    "feels like": "feel like",
+    "felt like": "feel like",
+    "gave her a hand": "give someone a hand",
+    "gave him a hand": "give someone a hand",
+    "gave it a shot": "give it a shot",
+    "gave me a hand": "give someone a hand",
+    "gave sb a hand": "give someone a hand",
+    "gave somebody a hand": "give someone a hand",
+    "gave someone a hand": "give someone a hand",
+    "gave them a hand": "give someone a hand",
+    "gave us a hand": "give someone a hand",
+    "gave you a hand": "give someone a hand",
+    "get on her nerves": "get on someone's nerves",
+    "get on his nerves": "get on someone's nerves",
+    "get on its nerves": "get on someone's nerves",
+    "get on my nerves": "get on someone's nerves",
+    "get on our nerves": "get on someone's nerves",
+    "get on someher nerves": "get on someone's nerves",
+    "get on somehis nerves": "get on someone's nerves",
+    "get on someits nerves": "get on someone's nerves",
+    "get on somemy nerves": "get on someone's nerves",
+    "get on someour nerves": "get on someone's nerves",
+    "get on sometheir nerves": "get on someone's nerves",
+    "get on someyour nerves": "get on someone's nerves",
+    "get on their nerves": "get on someone's nerves",
+    "get on your nerves": "get on someone's nerves",
+    "gets away with": "get away with",
+    "gets cold feet": "get cold feet",
+    "gets on her nerves": "get on someone's nerves",
+    "gets on his nerves": "get on someone's nerves",
+    "gets on its nerves": "get on someone's nerves",
+    "gets on my nerves": "get on someone's nerves",
+    "gets on our nerves": "get on someone's nerves",
+    "gets on someher nerves": "get on someone's nerves",
+    "gets on somehis nerves": "get on someone's nerves",
+    "gets on someits nerves": "get on someone's nerves",
+    "gets on somemy nerves": "get on someone's nerves",
+    "gets on someone's nerves": "get on someone's nerves",
+    "gets on someour nerves": "get on someone's nerves",
+    "gets on sometheir nerves": "get on someone's nerves",
+    "gets on someyour nerves": "get on someone's nerves",
+    "gets on their nerves": "get on someone's nerves",
+    "gets on your nerves": "get on someone's nerves",
+    "gets the hang of": "get the hang of",
+    "getting away with": "get away with",
+    "getting cold feet": "get cold feet",
+    "getting on her nerves": "get on someone's nerves",
+    "getting on his nerves": "get on someone's nerves",
+    "getting on its nerves": "get on someone's nerves",
+    "getting on my nerves": "get on someone's nerves",
+    "getting on our nerves": "get on someone's nerves",
+    "getting on someher nerves": "get on someone's nerves",
+    "getting on somehis nerves": "get on someone's nerves",
+    "getting on someits nerves": "get on someone's nerves",
+    "getting on somemy nerves": "get on someone's nerves",
+    "getting on someone's nerves": "get on someone's nerves",
+    "getting on someour nerves": "get on someone's nerves",
+    "getting on sometheir nerves": "get on someone's nerves",
+    "getting on someyour nerves": "get on someone's nerves",
+    "getting on their nerves": "get on someone's nerves",
+    "getting on your nerves": "get on someone's nerves",
+    "getting the hang of": "get the hang of",
+    "give her a hand": "give someone a hand",
+    "give him a hand": "give someone a hand",
+    "give me a hand": "give someone a hand",
+    "give sb a hand": "give someone a hand",
+    "give somebody a hand": "give someone a hand",
+    "give them a hand": "give someone a hand",
+    "give us a hand": "give someone a hand",
+    "give you a hand": "give someone a hand",
+    "given her a hand": "give someone a hand",
+    "given him a hand": "give someone a hand",
+    "given it a shot": "give it a shot",
+    "given me a hand": "give someone a hand",
+    "given sb a hand": "give someone a hand",
+    "given somebody a hand": "give someone a hand",
+    "given someone a hand": "give someone a hand",
+    "given them a hand": "give someone a hand",
+    "given us a hand": "give someone a hand",
+    "given you a hand": "give someone a hand",
+    "gives her a hand": "give someone a hand",
+    "gives him a hand": "give someone a hand",
+    "gives it a shot": "give it a shot",
+    "gives me a hand": "give someone a hand",
+    "gives sb a hand": "give someone a hand",
+    "gives somebody a hand": "give someone a hand",
+    "gives someone a hand": "give someone a hand",
+    "gives them a hand": "give someone a hand",
+    "gives us a hand": "give someone a hand",
+    "gives you a hand": "give someone a hand",
+    "giving her a hand": "give someone a hand",
+    "giving him a hand": "give someone a hand",
+    "giving it a shot": "give it a shot",
+    "giving me a hand": "give someone a hand",
+    "giving sb a hand": "give someone a hand",
+    "giving somebody a hand": "give someone a hand",
+    "giving someone a hand": "give someone a hand",
+    "giving them a hand": "give someone a hand",
+    "giving us a hand": "give someone a hand",
+    "giving you a hand": "give someone a hand",
+    "goes the extra mile": "go the extra mile",
+    "goes with the flow": "go with the flow",
+    "going the extra mile": "go the extra mile",
+    "going with the flow": "go with the flow",
+    "gone the extra mile": "go the extra mile",
+    "gone with the flow": "go with the flow",
+    "got away with": "get away with",
+    "got cold feet": "get cold feet",
+    "got on her nerves": "get on someone's nerves",
+    "got on his nerves": "get on someone's nerves",
+    "got on its nerves": "get on someone's nerves",
+    "got on my nerves": "get on someone's nerves",
+    "got on our nerves": "get on someone's nerves",
+    "got on someher nerves": "get on someone's nerves",
+    "got on somehis nerves": "get on someone's nerves",
+    "got on someits nerves": "get on someone's nerves",
+    "got on somemy nerves": "get on someone's nerves",
+    "got on someone's nerves": "get on someone's nerves",
+    "got on someour nerves": "get on someone's nerves",
+    "got on sometheir nerves": "get on someone's nerves",
+    "got on someyour nerves": "get on someone's nerves",
+    "got on their nerves": "get on someone's nerves",
+    "got on your nerves": "get on someone's nerves",
+    "got the hang of": "get the hang of",
+    "gotten away with": "get away with",
+    "gotten cold feet": "get cold feet",
+    "gotten on her nerves": "get on someone's nerves",
+    "gotten on his nerves": "get on someone's nerves",
+    "gotten on its nerves": "get on someone's nerves",
+    "gotten on my nerves": "get on someone's nerves",
+    "gotten on our nerves": "get on someone's nerves",
+    "gotten on someher nerves": "get on someone's nerves",
+    "gotten on somehis nerves": "get on someone's nerves",
+    "gotten on someits nerves": "get on someone's nerves",
+    "gotten on somemy nerves": "get on someone's nerves",
+    "gotten on someone's nerves": "get on someone's nerves",
+    "gotten on someour nerves": "get on someone's nerves",
+    "gotten on sometheir nerves": "get on someone's nerves",
+    "gotten on someyour nerves": "get on someone's nerves",
+    "gotten on their nerves": "get on someone's nerves",
+    "gotten on your nerves": "get on someone's nerves",
+    "gotten the hang of": "get the hang of",
+    "hits the nail on the head": "hit the nail on the head",
+    "hits the sack": "hit the sack",
+    "hitting the nail on the head": "hit the nail on the head",
+    "hitting the sack": "hit the sack",
+    "is about to": "be about to",
+    "is likely to": "be likely to",
+    "is supposed to": "be supposed to",
+    "is willing to": "be willing to",
+    "is worth": "be worth",
+    "keeping an eye on": "keep an eye on",
+    "keeping in mind": "keep in mind",
+    "keeping in touch": "keep in touch",
+    "keeps an eye on": "keep an eye on",
+    "keeps in mind": "keep in mind",
+    "keeps in touch": "keep in touch",
+    "kept an eye on": "keep an eye on",
+    "kept in mind": "keep in mind",
+    "kept in touch": "keep in touch",
+    "lets alone": "let alone",
+    "lets the cat out of the bag": "let the cat out of the bag",
+    "letting alone": "let alone",
+    "letting the cat out of the bag": "let the cat out of the bag",
+    "loses touch with": "lose touch with",
+    "losing touch with": "lose touch with",
+    "lost touch with": "lose touch with",
+    "made ends meet": "make ends meet",
+    "made sense": "make sense",
+    "made the most of": "make the most of",
+    "made up her mind": "make up one's mind",
+    "made up his mind": "make up one's mind",
+    "made up its mind": "make up one's mind",
+    "made up my mind": "make up one's mind",
+    "made up one's mind": "make up one's mind",
+    "made up our mind": "make up one's mind",
+    "made up their mind": "make up one's mind",
+    "made up your mind": "make up one's mind",
+    "make up her mind": "make up one's mind",
+    "make up his mind": "make up one's mind",
+    "make up its mind": "make up one's mind",
+    "make up my mind": "make up one's mind",
+    "make up our mind": "make up one's mind",
+    "make up their mind": "make up one's mind",
+    "make up your mind": "make up one's mind",
+    "makes ends meet": "make ends meet",
+    "makes sense": "make sense",
+    "makes the most of": "make the most of",
+    "makes up her mind": "make up one's mind",
+    "makes up his mind": "make up one's mind",
+    "makes up its mind": "make up one's mind",
+    "makes up my mind": "make up one's mind",
+    "makes up one's mind": "make up one's mind",
+    "makes up our mind": "make up one's mind",
+    "makes up their mind": "make up one's mind",
+    "makes up your mind": "make up one's mind",
+    "making ends meet": "make ends meet",
+    "making sense": "make sense",
+    "making the most of": "make the most of",
+    "making up her mind": "make up one's mind",
+    "making up his mind": "make up one's mind",
+    "making up its mind": "make up one's mind",
+    "making up my mind": "make up one's mind",
+    "making up one's mind": "make up one's mind",
+    "making up our mind": "make up one's mind",
+    "making up their mind": "make up one's mind",
+    "making up your mind": "make up one's mind",
+    "off the top of her head": "off the top of my head",
+    "off the top of his head": "off the top of my head",
+    "off the top of your head": "off the top of my head",
+    "piece of cake": "a piece of cake",
+    "pull her leg": "pull someone's leg",
+    "pull his leg": "pull someone's leg",
+    "pull its leg": "pull someone's leg",
+    "pull my leg": "pull someone's leg",
+    "pull our leg": "pull someone's leg",
+    "pull someher leg": "pull someone's leg",
+    "pull somehis leg": "pull someone's leg",
+    "pull someits leg": "pull someone's leg",
+    "pull somemy leg": "pull someone's leg",
+    "pull someour leg": "pull someone's leg",
+    "pull sometheir leg": "pull someone's leg",
+    "pull someyour leg": "pull someone's leg",
+    "pull their leg": "pull someone's leg",
+    "pull your leg": "pull someone's leg",
+    "pulled her leg": "pull someone's leg",
+    "pulled his leg": "pull someone's leg",
+    "pulled its leg": "pull someone's leg",
+    "pulled my leg": "pull someone's leg",
+    "pulled our leg": "pull someone's leg",
+    "pulled someher leg": "pull someone's leg",
+    "pulled somehis leg": "pull someone's leg",
+    "pulled someits leg": "pull someone's leg",
+    "pulled somemy leg": "pull someone's leg",
+    "pulled someone's leg": "pull someone's leg",
+    "pulled someour leg": "pull someone's leg",
+    "pulled sometheir leg": "pull someone's leg",
+    "pulled someyour leg": "pull someone's leg",
+    "pulled their leg": "pull someone's leg",
+    "pulled your leg": "pull someone's leg",
+    "pulling her leg": "pull someone's leg",
+    "pulling his leg": "pull someone's leg",
+    "pulling its leg": "pull someone's leg",
+    "pulling my leg": "pull someone's leg",
+    "pulling our leg": "pull someone's leg",
+    "pulling someher leg": "pull someone's leg",
+    "pulling somehis leg": "pull someone's leg",
+    "pulling someits leg": "pull someone's leg",
+    "pulling somemy leg": "pull someone's leg",
+    "pulling someone's leg": "pull someone's leg",
+    "pulling someour leg": "pull someone's leg",
+    "pulling sometheir leg": "pull someone's leg",
+    "pulling someyour leg": "pull someone's leg",
+    "pulling their leg": "pull someone's leg",
+    "pulling your leg": "pull someone's leg",
+    "pulls her leg": "pull someone's leg",
+    "pulls his leg": "pull someone's leg",
+    "pulls its leg": "pull someone's leg",
+    "pulls my leg": "pull someone's leg",
+    "pulls our leg": "pull someone's leg",
+    "pulls someher leg": "pull someone's leg",
+    "pulls somehis leg": "pull someone's leg",
+    "pulls someits leg": "pull someone's leg",
+    "pulls somemy leg": "pull someone's leg",
+    "pulls someone's leg": "pull someone's leg",
+    "pulls someour leg": "pull someone's leg",
+    "pulls sometheir leg": "pull someone's leg",
+    "pulls someyour leg": "pull someone's leg",
+    "pulls their leg": "pull someone's leg",
+    "pulls your leg": "pull someone's leg",
+    "rule of thumb": "a rule of thumb",
+    "spilled the beans": "spill the beans",
+    "spilling the beans": "spill the beans",
+    "spills the beans": "spill the beans",
+    "spilt the beans": "spill the beans",
+    "take her time": "take one's time",
+    "take his time": "take one's time",
+    "take its time": "take one's time",
+    "take my time": "take one's time",
+    "take our time": "take one's time",
+    "take their time": "take one's time",
+    "take your time": "take one's time",
+    "taken for granted": "take for granted",
+    "taken her time": "take one's time",
+    "taken his time": "take one's time",
+    "taken into account": "take into account",
+    "taken it easy": "take it easy",
+    "taken its time": "take one's time",
+    "taken my time": "take one's time",
+    "taken one's time": "take one's time",
+    "taken our time": "take one's time",
+    "taken their time": "take one's time",
+    "taken your time": "take one's time",
+    "takes for granted": "take for granted",
+    "takes her time": "take one's time",
+    "takes his time": "take one's time",
+    "takes into account": "take into account",
+    "takes it easy": "take it easy",
+    "takes its time": "take one's time",
+    "takes my time": "take one's time",
+    "takes one's time": "take one's time",
+    "takes our time": "take one's time",
+    "takes their time": "take one's time",
+    "takes your time": "take one's time",
+    "taking for granted": "take for granted",
+    "taking her time": "take one's time",
+    "taking his time": "take one's time",
+    "taking into account": "take into account",
+    "taking it easy": "take it easy",
+    "taking its time": "take one's time",
+    "taking my time": "take one's time",
+    "taking one's time": "take one's time",
+    "taking our time": "take one's time",
+    "taking their time": "take one's time",
+    "taking your time": "take one's time",
+    "took for granted": "take for granted",
+    "took her time": "take one's time",
+    "took his time": "take one's time",
+    "took into account": "take into account",
+    "took it easy": "take it easy",
+    "took its time": "take one's time",
+    "took my time": "take one's time",
+    "took one's time": "take one's time",
+    "took our time": "take one's time",
+    "took their time": "take one's time",
+    "took your time": "take one's time",
+    "was about to": "be about to",
+    "was likely to": "be likely to",
+    "was supposed to": "be supposed to",
+    "was willing to": "be willing to",
+    "was worth": "be worth",
+    "went the extra mile": "go the extra mile",
+    "went with the flow": "go with the flow",
+    "were about to": "be about to",
+    "were likely to": "be likely to",
+    "were supposed to": "be supposed to",
+    "were willing to": "be willing to",
+    "were worth": "be worth"
+  }
+}
