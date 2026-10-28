@@ -1,3 +1,4 @@
+import { idiomEntry, idiomWords } from "@/lib/idiomx";
 import learningNotes from "@/data/idioms/learning-notes.json";
 import { corpusEntry, corpusWords } from "@/lib/wordnet";
 // Original learning notes and examples; references are for sense verification.
@@ -62,7 +63,7 @@ export function phraseEntry(value: string) {
   const input = normalizeExpression(value).toLowerCase();
   const word = Object.prototype.hasOwnProperty.call(aliases, input) ? aliases[input] : input;
   const note = Object.prototype.hasOwnProperty.call(notes, word) ? notes[word] : undefined;
-  if (!note) return corpusEntry(word);
+  if (!note) return idiomEntry(word) || corpusEntry(word);
   return {
     word, jp: note.jp, phonetics: [], source: "アプリの熟語学習ノート",
     sourceUrls: [note.ref ? reference + note.ref : "https://dictionary.cambridge.org/search/english/direct/?q=" + encodeURIComponent(word)],
@@ -107,7 +108,7 @@ function distance(a: string, b: string) {
 export function phraseSuggestions(value: string) {
   const query = normalizeExpression(value).toLowerCase();
   if (!query || query.length > 100) return [];
-  const words = new Set([...Object.keys(notes), ...corpusWords]);
+  const words = new Set([...Object.keys(notes), ...idiomWords, ...corpusWords]);
   return [...words].map(word => {
     const note = Object.prototype.hasOwnProperty.call(notes, word) ? notes[word] : undefined;
     const score = word === query || aliases[query] === word ? 100 :

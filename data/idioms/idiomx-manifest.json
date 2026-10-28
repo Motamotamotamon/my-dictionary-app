@@ -1,0 +1,8 @@
+{
+  "entries": 1000,
+  "slang": 44,
+  "source": "https://huggingface.co/datasets/aymansharara/IdiomX",
+  "sha256": "7c17e4ed932ea828b4839f96e0bc00201c72dd2f66c499a001d13843e52f7249",
+  "license": "CC-BY-SA-4.0",
+  "changes": "Filtered, normalized, examples omitted. Definitions and usage labels are AI-enriched upstream, not individually verified. Japanese translations are supplied at runtime."
+}

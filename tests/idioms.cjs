@@ -47,3 +47,23 @@ assert(p.phraseSuggestions('made up her mind').some(e=>e.word==="make up one's m
 for(const unknown of ['I feel like eating lunch', '__proto__', 'imaginary idiom qzx']) assert.equal(p.phraseEntry(unknown),null);
 const added=Object.keys(expanded.notes).filter(word=>!corpus.corpusWords.includes(word)).length;
 console.log('PASS 100 bilingual learning entries, '+Object.keys(expanded.aliases).length+' variants; existing senses preserved; '+added+' entries absent from exact WordNet corpus');
+
+const bulk=load('data/idioms/idiomx.json');
+assert.equal(Object.keys(bulk).length,1000);
+assert.equal(Object.values(bulk).filter(e=>e.slang).length,44);
+for(const [word, note] of Object.entries(bulk)){
+ const e=p.phraseEntry(word);
+ assert.equal(e.word,word);
+ assert(e.meanings[0].definitions[0].definition);
+ assert(e.source.includes('AI'));
+ assert(e.sourceUrls.includes('/idiomx-attribution.txt'));
+ if(note.slang) assert(e.usageNote.includes('失礼'));
+ assert(!corpus.corpusWords.includes(word),'duplicate corpus entry');
+ const saved=JSON.parse(JSON.stringify({content:word,meanings:e.meanings}));
+ assert.equal(saved.meanings[0].definitions[0].definition,note.definition);
+}
+for(const bad of ['to the','i would','eye sex','get it up','on the boob','asian don\'t raisin'])
+ assert(!Object.hasOwn(bulk,bad));
+assert(p.phraseSuggestions('mic drop').some(e=>e.word==='mic drop'));
+assert(p.phraseEntry('MIC DROP').usageNote.includes('スラング'));
+console.log('PASS 1000 new entries, 44 slang labels, attribution, save payloads, filtering and suggestions');

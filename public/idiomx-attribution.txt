@@ -1,0 +1,17 @@
+IdiomX subset — CC BY-SA 4.0
+Copyright: IdiomX contributors (Ayman Sharara) and Wiktionary contributors.
+Sources:
+https://github.com/aymanshar/idiomx-dataset
+https://huggingface.co/datasets/aymansharara/IdiomX
+https://kaikki.org/
+https://en.wiktionary.org/
+License: https://creativecommons.org/licenses/by-sa/4.0/
+Changes: selected and normalized 1,000 entries; omitted examples; retained
+AI-enriched English explanations and register metadata. Not individually
+verified dictionary quotations. Japanese is automatically translated.
+This adapted data and its translations are offered under CC BY-SA 4.0.
+Original word-level source links are provided on each entry.
+Source subset and reproducible importer:
+https://github.com/Motamotamotamon/my-dictionary-app/tree/main/data/idioms
+https://github.com/Motamotamotamon/my-dictionary-app/blob/main/scripts/import_idiomx.py
+No endorsement by the original contributors is implied.

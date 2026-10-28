@@ -266,6 +266,7 @@ function WordContent({ word }: { word: string }) {
       {data[0]?.word?.toLowerCase() !== word.toLowerCase() && <p className="text-sm text-gray-600">基本形「{data[0]?.word}」の意味を表示しています。</p>}
       {data[0]?.source?.startsWith("Princeton WordNet") && <p className="text-sm text-gray-500">和訳は自動翻訳です。辞書に例文がない語義は、例文を表示しません。</p>}
       {data[0]?.sourceUrls?.length > 0 && <div className="text-sm flex flex-wrap gap-3">{data[0].sourceUrls.map((url: string) => <a key={url} href={url} target="_blank" rel="noreferrer" className="text-blue-600 underline">{url.endsWith("license.txt") ? "辞書ライセンス" : "出典を開く"}</a>)}</div>}
+      {data[0]?.usageNote && <p className="text-sm text-amber-800 bg-amber-50 p-3 rounded">{data[0].usageNote}</p>}
       {/* meanings */}
 
       {data[0]?.meanings?.map((m:any,i:number)=>(
