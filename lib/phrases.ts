@@ -2,6 +2,19 @@ import { corpusEntry, corpusWords } from "@/lib/wordnet";
 // Original learning notes and examples; references are for sense verification.
 const reference = "https://dictionary.cambridge.org/dictionary/english/";
 const notes: Record<string, { jp: string; senses: [string, string, string, string][]; ref: string }> = {
+  "have a crush on": { jp: "（人に）恋心を抱く・夢中になる", ref: "have-a-crush-on", senses: [
+    ["To feel a strong romantic attraction to someone, often without a relationship having started. Follow on with the person you like.", "（人に）恋心を抱く・夢中になる。片思いにも使うが、相手も好きかどうかはこの表現だけでは分からない。onの後に相手を置く。", "I have a crush on someone in my class.", "同じクラスの人に恋をしています。"],
+  ]},
+  "have a soft spot for": { jp: "〜に特別な愛着がある・〜に弱い", ref: "love", senses: [
+    ["To feel particular affection for someone or something. This does not have to be romantic.", "人や物に特別な愛着がある（恋愛感情とは限らない）", "I have a soft spot for old bookstores.", "古い本屋には特別な愛着があります。"],
+  ]},
+  "fall in love with": { jp: "〜に恋をする・〜に夢中になる", ref: "love", senses: [
+    ["To begin to love someone romantically.", "（人に）恋をする・恋に落ちる", "She fell in love with her best friend.", "彼女は親友に恋をしました。"],
+    ["To begin to like a place or thing very much.", "（場所や物を）とても好きになる・夢中になる", "We fell in love with the town on our first visit.", "初めて訪れたとき、その町が大好きになりました。"],
+  ]},
+  "be in love with": { jp: "〜を愛している・〜に恋をしている", ref: "love", senses: [
+    ["To feel romantic love for someone.", "（人を）愛している・恋をしている", "He is in love with his childhood friend.", "彼は幼なじみに恋をしています。"],
+  ]},
   "go out with": { jp: "（人と）付き合う・交際する／一緒に外出する", ref: "go-out-with", senses: [
     ["To date someone or be their romantic partner.", "（人と）付き合う・交際する", "Maya has been going out with Ken since June.", "マヤは6月からケンと付き合っています。"],
     ["To leave home and spend time somewhere with another person; the context may be non-romantic.", "（恋愛とは限らず）人と一緒に外出する", "I often go out with my colleagues after work.", "仕事の後によく同僚と出かけます。"],
@@ -57,6 +70,11 @@ export function phraseEntry(value: string) {
 
 // Explicit aliases only: no speculative replacement of arbitrary sentences.
 const aliases: Record<string, string> = {
+  "has a crush on": "have a crush on", "had a crush on": "have a crush on",
+  "have a crush on someone": "have a crush on", "have a crush on somebody": "have a crush on", "have a crush on sb": "have a crush on",
+  "has a soft spot for": "have a soft spot for", "had a soft spot for": "have a soft spot for",
+  "fell in love with": "fall in love with", "fallen in love with": "fall in love with", "falling in love with": "fall in love with", "falls in love with": "fall in love with",
+  "am in love with": "be in love with", "is in love with": "be in love with", "are in love with": "be in love with", "was in love with": "be in love with", "were in love with": "be in love with",
   "went out with": "go out with", "going out with": "go out with", "gone out with": "go out with",
   "dealt with": "deal with",
   "gave up": "give up", "given up": "give up", "giving up": "give up",
