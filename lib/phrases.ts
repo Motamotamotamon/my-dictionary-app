@@ -1,7 +1,9 @@
+import learningNotes from "@/data/idioms/learning-notes.json";
 import { corpusEntry, corpusWords } from "@/lib/wordnet";
 // Original learning notes and examples; references are for sense verification.
 const reference = "https://dictionary.cambridge.org/dictionary/english/";
-const notes: Record<string, { jp: string; senses: [string, string, string, string][]; ref: string }> = {
+const notes: Record<string, { jp: string; senses: string[][]; ref?: string }> = {
+  ...learningNotes.notes,
   "have a crush on": { jp: "（人に）恋心を抱く・夢中になる", ref: "have-a-crush-on", senses: [
     ["To feel a strong romantic attraction to someone, often without a relationship having started. Follow on with the person you like.", "（人に）恋心を抱く・夢中になる。片思いにも使うが、相手も好きかどうかはこの表現だけでは分からない。onの後に相手を置く。", "I have a crush on someone in my class.", "同じクラスの人に恋をしています。"],
   ]},
@@ -53,7 +55,7 @@ const notes: Record<string, { jp: string; senses: [string, string, string, strin
 };
 
 export function normalizeExpression(value: string) {
-  return value.normalize("NFKC").trim().replace(/\s+/g, " ");
+  return value.normalize("NFKC").replace(/[’‘]/g, "'").trim().replace(/\s+/g, " ");
 }
 
 export function phraseEntry(value: string) {
@@ -63,13 +65,18 @@ export function phraseEntry(value: string) {
   if (!note) return corpusEntry(word);
   return {
     word, jp: note.jp, phonetics: [], source: "アプリの熟語学習ノート",
-    sourceUrls: [reference + note.ref],
-    meanings: [{ partOfSpeech: "phrase / phrasal verb", definitions: note.senses.map(([definition, jp, example, exampleJP]) => ({ definition, jp, example, exampleJP })) }],
+    sourceUrls: [note.ref ? reference + note.ref : "https://dictionary.cambridge.org/search/english/direct/?q=" + encodeURIComponent(word)],
+    meanings: [
+      { partOfSpeech: "phrase / idiom", definitions: note.senses.map(([definition, jp, example, exampleJP]) => ({ definition, jp, example, exampleJP })) },
+      // Keep existing corpus senses accessible when a new learning note enriches an entry.
+      ...(Object.prototype.hasOwnProperty.call(learningNotes.notes, word) ? corpusEntry(word)?.meanings || [] : []),
+    ],
   };
 }
 
 // Explicit aliases only: no speculative replacement of arbitrary sentences.
 const aliases: Record<string, string> = {
+  ...learningNotes.aliases,
   "has a crush on": "have a crush on", "had a crush on": "have a crush on",
   "have a crush on someone": "have a crush on", "have a crush on somebody": "have a crush on", "have a crush on sb": "have a crush on",
   "has a soft spot for": "have a soft spot for", "had a soft spot for": "have a soft spot for",

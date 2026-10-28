@@ -20,3 +20,30 @@ assert.equal(p.phraseEntry('I have a crush on Alex'),null);
 assert.equal(p.phraseEntry('constructor'),null);
 assert(p.phraseEntry('go out with').jp.includes('交際'));
 console.log('PASS idioms: definitions/examples, inflections, normalization, suggestions, serializable saved senses, unknown input');
+
+const expanded = load('data/idioms/learning-notes.json');
+const corpus = load('lib/wordnet.ts');
+assert.equal(Object.keys(expanded.notes).length, 100);
+for (const [word, note] of Object.entries(expanded.notes)) {
+ const entry = p.phraseEntry(word);
+ assert.equal(entry.word, word);
+ assert.equal(entry.jp, note.jp);
+ assert(entry.meanings[0].definitions.every(d=>d.definition&&d.jp&&d.example&&d.exampleJP));
+ const previous=corpus.corpusEntry(word);
+ if(previous) for(const meaning of previous.meanings) for(const def of meaning.definitions)
+  assert(entry.meanings.some(m=>m.definitions.some(d=>d.definition===def.definition)), 'Lost existing sense: '+word);
+}
+for(const [alias, canonical] of Object.entries(expanded.aliases)) assert.equal(p.phraseEntry(alias)?.word,canonical,alias);
+for(const [query, canonical] of [
+ ['made up her mind', "make up one's mind"],
+ ['took their time', "take one's time"],
+ ['is supposed to', 'be supposed to'],
+ ['got the hang of', 'get the hang of'],
+ ['can’t help', "can't help"],
+ ['ａ　ｐｉｅｃｅ　ｏｆ　ｃａｋｅ', 'a piece of cake']
+]) assert.equal(p.phraseEntry(query)?.word,canonical,query);
+assert(p.phraseSuggestions('コツ').some(e=>e.word==='get the hang of'));
+assert(p.phraseSuggestions('made up her mind').some(e=>e.word==="make up one's mind"));
+for(const unknown of ['I feel like eating lunch', '__proto__', 'imaginary idiom qzx']) assert.equal(p.phraseEntry(unknown),null);
+const added=Object.keys(expanded.notes).filter(word=>!corpus.corpusWords.includes(word)).length;
+console.log('PASS 100 bilingual learning entries, '+Object.keys(expanded.aliases).length+' variants; existing senses preserved; '+added+' entries absent from exact WordNet corpus');
