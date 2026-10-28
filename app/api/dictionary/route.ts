@@ -1,3 +1,4 @@
+import { displayGloss, ipaFromTags } from "@/lib/dictionary-display";
 import { normalizeExpression, phraseEntry } from "@/lib/phrases";
 import { NextResponse } from "next/server";
 
@@ -42,11 +43,12 @@ export async function GET(req: Request) {
       groups.set(part, definitions);
     }
     if (!groups.size) return NextResponse.json({ error: "Word not found" }, { status: 404 });
-    const pronunciation = Array.isArray(match.tags)
-      ? match.tags.find((tag: unknown) => typeof tag === "string" && tag.startsWith("pron:"))?.slice(5) : undefined;
+    const checked = displayGloss(match.word);
+    const pronunciation = checked?.phonetic || ipaFromTags(match.tags);
     return NextResponse.json([{
       word: match.word,
-      phonetics: pronunciation ? [{ text: pronunciation }] : [],
+      ...(checked ? { jp: checked.jp } : {}),
+      phonetics: pronunciation ? [{ text: pronunciation, estimated: !checked }] : [],
       meanings: Array.from(groups, ([partOfSpeech, definitions]) => ({ partOfSpeech, definitions })),
       sourceUrls: ["https://www.datamuse.com/api/"],
       source: "Datamuse (Wiktionary / WordNet)",

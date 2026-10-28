@@ -94,7 +94,7 @@ function WordContent({ word }: { word: string }) {
         if (!active()) return;
         setData(json);
         if (json[0].jp) setJpWord(json[0].jp);
-        else void translate(json[0].source?.startsWith("Princeton WordNet") ? json[0].meanings[0]?.definitions[0]?.definition || word : word, true);
+        else void translate(json[0].meanings[0]?.definitions[0]?.definition || word, true);
         json[0].meanings.forEach((meaning: any) => {
           meaning.definitions?.forEach((definition: any) => {
             if (definition.jp) {
@@ -241,11 +241,13 @@ function WordContent({ word }: { word: string }) {
         {phonetic && (
           <p className="text-gray-500 mt-1">
             {phonetic}
+            {data[0]?.phonetics?.find((p: any) => p.text)?.estimated && <span className="block text-xs">推定の発音表記（IPA）</span>}
           </p>
         )}
 
         {jpWord && (
           <p className="text-xl font-semibold mt-2">
+            <span className="block text-sm font-normal text-gray-500">{data[0]?.jp ? "日本語の意味" : "日本語の意味（定義の自動翻訳）"}</span>
             🇯🇵 {jpWord}
           </p>
         )}
