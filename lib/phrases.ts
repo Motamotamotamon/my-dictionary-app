@@ -1,3 +1,4 @@
+import { conversationEntry, conversationWords } from "@/lib/conversation";
 import { idiomEntry, idiomWords } from "@/lib/idiomx";
 import learningNotes from "@/data/idioms/learning-notes.json";
 import { corpusEntry, corpusWords } from "@/lib/wordnet";
@@ -61,6 +62,8 @@ export function normalizeExpression(value: string) {
 
 export function phraseEntry(value: string) {
   const input = normalizeExpression(value).toLowerCase();
+  const reply = conversationEntry(input);
+  if (reply) return reply;
   const word = Object.prototype.hasOwnProperty.call(aliases, input) ? aliases[input] : input;
   const note = Object.prototype.hasOwnProperty.call(notes, word) ? notes[word] : undefined;
   if (!note) return idiomEntry(word) || corpusEntry(word);
@@ -108,7 +111,7 @@ function distance(a: string, b: string) {
 export function phraseSuggestions(value: string) {
   const query = normalizeExpression(value).toLowerCase();
   if (!query || query.length > 100) return [];
-  const words = new Set([...Object.keys(notes), ...idiomWords, ...corpusWords]);
+  const words = new Set([...Object.keys(notes), ...conversationWords, ...idiomWords, ...corpusWords]);
   return [...words].map(word => {
     const note = Object.prototype.hasOwnProperty.call(notes, word) ? notes[word] : undefined;
     const score = word === query || aliases[query] === word ? 100 :

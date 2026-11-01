@@ -1,3 +1,4 @@
+import { isWorkDescription } from "@/lib/conversation";
 import { displayGloss, ipaFromTags } from "@/lib/dictionary-display";
 import { normalizeExpression, phraseEntry } from "@/lib/phrases";
 import { NextResponse } from "next/server";
@@ -36,8 +37,8 @@ export async function GET(req: Request) {
       if (typeof raw !== "string") continue;
       const tab = raw.indexOf("\t");
       const definition = (tab >= 0 ? raw.slice(tab + 1) : raw).trim();
-      if (!definition) continue;
-      const part = tab >= 0 ? parts[raw.slice(0, tab)] || raw.slice(0, tab) : "other";
+      if (!definition || isWorkDescription(definition)) continue;
+      const part = tab >= 0 ? parts[raw.slice(0, tab).toLowerCase()] || raw.slice(0, tab) : "other";
       const definitions = groups.get(part) || [];
       definitions.push({ definition });
       groups.set(part, definitions);
